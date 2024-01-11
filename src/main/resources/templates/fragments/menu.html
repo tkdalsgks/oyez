@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="menu">
+	<div id="popup__background" class="background__menu">
+		<div class="window">
+	   		
+			<div class="popup__menu">
+				<div class="close__menu">
+					<!--<a class="" th:href="@{/}"><img src="/img/app/common/logo.png"></a>-->
+					<div id="close__menu" class="btn__close" onclick="close__menu();">
+						<div class="menu__brand">Oyez</div>
+						<div>
+							<svg xmlns="http://www.w3.org/2000/svg" width="1.75rem" height="1.75rem" viewBox="0 0 50 50" fill="var(--text1)">
+								<path d="M 9.15625 6.3125 L 6.3125 9.15625 L 22.15625 25 L 6.21875 40.96875 L 9.03125 43.78125 L 25 27.84375 L 40.9375 43.78125 L 43.78125 40.9375 L 27.84375 25 L 43.6875 9.15625 L 40.84375 6.3125 L 25 22.15625 Z"></path>
+							</svg>
+						</div>					
+					</div>
+				</div>
+	   			
+	   			<div>
+					<a class="popup-content__item" th:href="@{/community}">오늘 하루</a>
+					<a class="popup-content__item" th:href="@{/review}">리뷰</a>
+				</div>
+				<div class="popup__line"></div>
+				
+				<div>
+					<div style="margin: .75rem 1.25rem; display: flex; align-items: center;">
+						<img th:src="${profileImg}" style="width: 3rem; height: 3rem; border: none; border-radius: 999px;">
+						<div style="display: flex; flex-direction: column; margin-left: .75rem;">
+							<span th:text="${memberName}" style="font-size: .9rem; color: var(--text1);"></span>
+							<span th:text="${memberEmail}" style="font-size: .9rem; color: var(--text1);">이메일</span>
+						</div>
+					</div>
+					<a sec:authorize="isAuthenticated()" class="popup-content__item" th:onclick="goProfile([[ ${memberId} ]]);">프로필</a>
+					<a sec:authorize="isAuthenticated()" class="popup-content__item" th:onclick="goAccount([[ ${memberId} ]]);">계정 관리</a>
+					<a class="popup-content__item" th:href="@{/rank}">활동 순위</a>
+				</div>
+				<div class="popup__line"></div>
+				
+				<!-- Login Content -->
+				<div sec:authorize="isAuthenticated()">
+					<a class="popup-content__item" th:href="@{/logout}">로그아웃</a>
+				</div>
+			    
+			    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')" class="popup__admin">
+					<a class="popup-content__item" th:href="@{/admin}">관리자</a>
+					<a class="popup-content__item" th:href="@{/points/goods}">도장</a>
+				</div>
+					
+	   		</div>
+		</div>
+	</div>
+</div>

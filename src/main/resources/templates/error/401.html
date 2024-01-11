@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, ERROR</title>
+
+<th:block layout:fragment="css">
+	<!-- RESET, DEFAULT -->
+	<link rel="stylesheet" th:href="@{/css/app/reset.css}" />
+	<link rel="stylesheet" th:href="@{/css/lib/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/default.css}" />
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+</th:block>
+
+</head>
+
+<body>
+	
+	<main layout:fragment="content" class="container">
+		<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 550px; text-align: center;">
+			<img src="/img/app/common/logo.png" style="width: 60px; margin-bottom: 5rem;">
+			<p style="font-size: 1.125rem; font-weight: 600;">
+				401 ERROR
+			</p>
+			<p style="font-size: 1.125rem; font-weight: 600;">
+				로그인 권한이 필요합니다.
+			</p>
+			<p style="font-size: 1.125rem; font-weight: 600; text-decoration: underline; color: black;">
+				<a href="javascript:history.go(-1)">이전 페이지로 돌아가기</a>
+			</p>
+		</div>
+	</main>
+	
+</body>
+
+</html>

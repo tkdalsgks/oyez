@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="OYEZ - All That Community">
+<meta name="keywords" content="OYEZ, All That Community">
+<meta name="author" content="tkdalsgks">
+<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+<link rel="shortcut icon" href="/img/upload/favicon.ico">
+
+<title>OYEZ, layout</title>
+
+<!-- RESET, DEFAULT -->
+<link rel="stylesheet" th:href="@{/css/app/common/reset.css}" />
+<link rel="stylesheet" th:href="@{/css/lib/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/lib/toastr.css}" />
+<link rel="stylesheet" th:href="@{/css/app/index/index.css}" />
+<link rel="stylesheet" th:href="@{/css/app/common/default.css}" />
+	
+<!-- CSS -->
+<th:block layout:fragment="css"></th:block>
+
+</head>
+
+<body data-theme="light">
+	
+	<!-- HEADER -->
+	<th:block th:replace="~{fragments/header :: header}"></th:block>
+	
+	<!-- CONTENT -->
+	<th:block layout:fragment="content"></th:block>
+	
+	<!-- FOOTER -->
+	<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+	
+	<!-- POPUP : CHAT -->
+	<!--<th:block th:replace="~{fragments/chat :: chat}"></th:block>-->
+	
+	<!-- POPUP : MENU -->
+	<th:block th:replace="~{fragments/menu :: menu}"></th:block>
+	
+	<!-- POPUP : FIND -->
+	<!--<th:block th:replace="~{user/find_user :: find}"></th:block>-->
+	
+	<!-- COMMON : SCRIPT -->
+	<!-- FONT AWESOME -->
+	<script type="text/javascript" src="/js/lib/fontawesome.js"></script>
+	<!-- Jquery, Bootstrap -->
+	<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/app/header.js"></script>
+	<!-- SWEETALERT2 -->
+	<script type="text/javascript" src="/js/lib/sweetalert2.js"></script>
+	<!-- TOASTR  -->
+	<script type="text/javascript" src="/js/lib/toastr.js"></script>
+	<!-- POPUP -->
+	<script type="text/javascript" src="/js/lib/sockjs.min.js"></script>
+	<script type="text/javascript" src="/js/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="/js/app/popup.js"></script>
+	<!-- PREFIX -->
+	<script type="text/javascript" src="/js/lib/prefixfree.min.js"></script>
+	
+	<!-- SCRIPT -->
+	<th:block layout:fragment="script"></th:block>
+	
+</body>
+
+</html>

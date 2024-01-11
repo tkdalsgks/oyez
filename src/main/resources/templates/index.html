@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, All That Community</title>
+
+<th:block layout:fragment="css">
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+	<!-- FIND -->
+	<link rel="stylesheet" th:href="@{/css/app/find.css}" />
+</th:block>
+
+</head>
+
+<body>
+	
+	<!-- INDEX : CONTENT -->
+	<main layout:fragment="content" class="form-index">
+	
+		<div class="index-brand">
+			<a th:href="@{/}">Oyez</a>
+		</div>
+		<div sec:authorize="isAnonymous()" id="form-index-one">
+			<div class="form-login-sns">
+				<button class="btn-kakao-login marginBottom10">
+	           		<img src="/img/app/login/btn_kakao.svg">
+	           		<span>카카오로 로그인</span>
+	           	</button><br>
+	           	<button class="btn-google-login marginBottom10">
+	           		<img src="/img/app/login/btn_google.svg">
+	           		<span>Google로 로그인</span>
+	           	</button><br>
+				<button type="button" id="others-login" class="btn others-login">다른 방법으로 로그인</button><br>
+				<button type="button" id="" class="btn others-login">사이트 둘러보기</button>
+			</div>
+		</div>
+		
+		<div sec:authorize="isAnonymous()" id="form-index-two">
+				<div class="form-login-general">
+					<div class="marginBottom40">
+						<input type="text" id="memberId" name="memberId" class="form-control marginBottom10 required" placeholder="아이디">
+						<input type="password" id="memberPwd" name="memberPwd" class="form-control marginBottom5 required" placeholder="비밀번호">
+						<button id="find-show" class="find-user" onclick="findOpenPopup();">아이디 찾기</button>
+						<button id="find-show" class="find-user">|</button>
+						<button id="find-show" class="find-user" onclick="findOpenPopup();">비밀번호 찾기</button>
+					</div>
+					<div>
+						<button id="login-general" class="btn btn-login">로그인</button><br>
+						<a th:href="@{/join}"><button type="button" class="btn btn-join">회원가입</button></a>
+					</div>
+				</div>
+		</div>
+		
+	</main>
+	
+	<!-- INDEX : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- INDEX -->
+		<script type="text/javascript" src="/js/app/index.js"></script>
+		<!--<script type="text/javascript" src="/js/app/user/find.js"></script>-->
+	</th:block>
+	
+</body>
+
+</html>

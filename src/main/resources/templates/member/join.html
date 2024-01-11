@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, 회원가입</title>
+
+<th:block layout:fragment="css">
+	<!-- RESET, DEFAULT -->
+	<link rel="stylesheet" th:href="@{/css/app/common/reset.css}" />
+	<link rel="stylesheet" th:href="@{/css/lib/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/index/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/common/default.css}" />
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+	<!-- FIND -->
+	<link rel="stylesheet" th:href="@{/css/app/find.css}" />
+</th:block>
+
+<style>
+	.fieldError {
+		border-color: #bd2130;
+	}
+</style>
+
+</head>
+<body>
+	
+	<!-- USER_JOIN : CONTENT -->
+	<main layout:fragment="content" class="container container-join">
+		<div class="join-brand">
+			<a th:href="@{/}"><img src="/img/app/common/logo.png"></a>
+		</div>
+			
+			<table class="form-join">
+				
+				<tr>
+					<th style="padding: 5px;">
+						<label class="form-label"><span class="text-danger">* </span>아이디</label>
+					</th>
+					<td>
+						<div class="form-group-join">
+							<input type="text" id="memberId" name="memberId" class="form-control required">
+						</div>
+					</td>
+					<td>
+						<button type="button" id="duplicateMemberId" class="btn btn-primary btn-duplicate-id">중복확인</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<span id="checkMemberId">아이디는 4~20자 사이의 영문, 숫자로 이루어져야 합니다.</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						<label class="form-label"><span class="text-danger">* </span>비밀번호</label>
+					</th>
+					<td>
+						<div class="form-group-join">
+							<input type="password" id="memberPwd" name="memberPwd" class="form-control required">
+						</div>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<span id="checkMemberPwd">비밀번호는 8~16자 사이의 대/소문자, 숫자, 특수문자가 모두 포함되어야 합니다.</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						<label class="form-label"><span class="text-danger">* </span>비밀번호 확인</label>
+					</th>
+					<td>
+						<div class="form-group-join">
+							<input type="password" id="memberPwdConfirm" name="memberPwdConfirm" class="form-control required">
+						</div>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<span id="checkMemberPwdConfirm">입력한 비밀번호가 일치하지 않습니다.</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						<label class="form-label"><span class="text-danger">* </span>닉네임</label>
+					</th>
+					<td>
+						<div class="form-group-join">
+							<input type="text" id="memberNickname" name="memberNickname" class="form-control required">
+						</div>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<span id="checkMemberNickname">닉네임은 2~10자 사이의 한글, 영문, 숫자로 이루어져야 합니다.</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						<label class="form-label"><span class="text-danger">* </span>이메일</label>
+					</th>
+					<td>
+						<div class="form-group-join">
+							<input type="text" id="memberEmail" name="memberEmail" class="form-control required">
+						</div>
+					</td>
+					<td>
+						<button type="button" id="check-email" class="btn btn-primary btn-check-email" disabled="disabled">이메일 인증</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<span id="checkMemberEmail">올바르지 않은 이메일 형식입니다.</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						<label class="form-label"><span class="text-danger">* </span>인증번호</label>
+					</th>
+					<td>
+						<div class="form-group-join">
+							<input type="text" id="check-email-number" class="form-control required" placeholder="인증번호를 입력해주세요." disabled="disabled">
+						</div>
+					</td>
+					<td>
+						<button type="button" id="check-email-verify" class="btn btn-primary btn-check-email-verify" disabled="disabled">인증확인</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<div id="check-email-time"></div>
+					</td>
+				</tr>
+			</table>
+			
+			<div class="form-group-signed">
+				<button type="button" class="btn btn-secondary" onclick="goHome();">취소</button>
+				<button type="submit" id="joinSubmit" class="btn btn-secondary">회원가입</button>
+			</div>
+		
+	</main>
+	
+	<!-- USER_JOIN : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- JOIN -->
+		<script type="text/javascript" src="/js/app/member/join.js"></script>
+		<!-- LOADING -->
+		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
+		<script type="text/javascript" src="/js/app/loading.js"></script>
+	</th:block>
+	
+</body>
+</html>

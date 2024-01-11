@@ -1,0 +1,57 @@
+/* COMMON */
+.info-title { font-size: .875rem; font-weight: 400; }
+.info-contents { font-size: .875rem; font-weight: 400; }
+
+/* ASIDE */
+.aside { min-height: 100%; padding-top: 1.5rem; }
+.aside-title { display: -ms-grid; display: grid; font-size: 1.25rem; font-weight: 500; }
+.aside-title1 { color: blue; font-size: .75rem; font-weight: 400; }
+.aside-subtitle { display: -ms-grid; display: grid; padding-top: 1rem; padding-bottom: 1rem; cursor: pointer; }
+.aside-subtitle a { padding: .5rem; }
+.aside-subtitle1 { display: -webkit-inline-box; display: -ms-inline-flexbox; display: inline-flex; margin-bottom: .25rem; -webkit-box-align: center; -ms-flex-align: center; align-items: center; font-size: 1rem; }
+.aside-subtitle1 span { margin-left: .25rem; font-weight: 400; }
+.aside-subtitle1:hover, .aside-subtitle2:hover { background: hsla(220, 9%, 46%, .25); border-radius: .5rem; }
+.aside-subtitle2 { display: -webkit-inline-box; display: -ms-inline-flexbox; display: inline-flex; -webkit-box-align: center; -ms-flex-align: center; align-items: center; font-size: 1rem; }
+.aside-subtitle2 span { margin-left: .25rem; font-weight: 400; }
+
+/* PROFILE */
+.profile-contents { padding-top: 2rem; padding-bottom: 2rem; }
+.profile-contents1 label { font-weight: 300; }
+.profile-contents1 input { width: 100%; height: 2.75rem; font-weight: 300; border: 1px solid hsla(220, 9%, 46%, .3); border-radius: .5rem; padding: .5rem;}
+.profile-contents2 { padding-top: 2rem; text-align: center; }
+.profile-contents2 img { width: 8rem; height: 8rem; border: 1px solid hsla(220, 9%, 46%, .3); border-radius: 50%; }
+
+.profile-email { margin-top: 1rem; }
+.profile-check-email, .profile-check-verify, .profile-img { background: #A0A0FF; border: none; border-radius: 5px; color: #fff; margin-left: .5rem; width: 8rem; height: 2.75rem; font-size: .75rem; }
+.profile-verify { display: -webkit-box; display: -ms-flexbox; display: flex; margin-top: .5rem; }
+.check-email-time { font-size: 1rem !important; -webkit-transform: translate(100%, 155%) !important; -ms-transform: translate(100%, 155%) !important; transform: translate(100%, 155%) !important; }
+
+.profile-input { border-top: 1px solid hsla(220, 9%, 46%, .3); padding-top: 2rem; }
+.profile-line { border-top: 1px solid hsla(220, 9%, 46%, .3); }
+
+.profile-info { padding-top: 2rem; padding-bottom: 2rem; }
+
+.profile-save { padding-top: 2rem; padding-bottom: 7rem; text-align: right; }
+.profile-save button { background: #A0A0FF; border: none; border-radius: 5px; color: #fff; width: 5rem; height: 2rem; font-size: .75rem; cursor: pointer; }
+
+/* ACCOUNT */
+.account-contents { padding-top: 2rem; padding-bottom: 2rem; }
+.account-contents1 label { font-weight: 300; }
+.account-contents1 input { width: 100%; height: 2.75rem; font-weight: 300; border: 1px solid hsla(220,9%,46%,.3); border-radius: .5rem; padding: .5rem;}
+.account-contents2 { padding-top: 2rem; text-align: center; }
+.account-contents2 img { width: 5rem; height: 5rem; border: 1px solid hsla(220,9%,46%,.3); border-radius: 50%; }
+
+.account-check-email, .account-check-verify { background: #A0A0FF; border: none; border-radius: 5px; color: #fff; margin-left: .5rem; width: 8rem; height: 2.75rem; font-size: .75rem; }
+.account-verify { display: -webkit-box; display: -ms-flexbox; display: flex; margin-top: .5rem; }
+.account-info { display: -webkit-inline-box; display: -ms-inline-flexbox; display: inline-flex; margin-top: 1rem; }
+.account-info span { margin-left: .25rem; font-size: .875rem !important; }
+
+.account-input { border-top: 1px solid hsla(220,9%,46%,.3); padding-top: 2rem; }
+.account-line { border-top: 1px solid hsla(220,9%,46%,.3); }
+
+.account-withdraw { padding-top: 2rem; padding-bottom: 2rem; }
+
+.account-withdraw button { background-color: rgb(250, 250, 250); border: none; border-radius: 5px; color: #000; 
+							width: 8rem; height: 2.75rem; cursor: pointer; font-size: .8rem; }
+
+.file-label { margin-top: 30px; background: #A0A0FF; color: #fff; text-align: center; padding: 10px 0; width: 15%; border-radius: 5px; font-size: .75rem; cursor: pointer; }

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, [[ ${review.title} ]]</title>
+
+<th:block layout:fragment="css">
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/popup.css}" />
+	<!-- BOARD -->
+	<link rel="stylesheet" th:href="@{/css/app/board/board.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/button.css}" />
+	<!-- GOOGLE ICON -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</th:block>
+
+</head>
+
+<body>
+
+	<!-- REVIEW_DETAIL : CONTENT -->
+	<main layout:fragment="content" class="container">
+
+		<!-- 현재 경로 -->
+		<div class="page_tits"></div>
+
+		<!-- 본문 내용 -->
+		<div class="content">
+			<input type="hidden" id="writer" name="writer" th:value="${review.writerId}">
+			<input type="hidden" id="writerName" name="writerName" th:value="${review.writer}">
+			<input type="hidden" id="userId" name="userId" th:value="${userId}">
+
+			<section>
+				<div class="board-title">
+					<span class="board-title1" id="board-title">[[ ${review.title} ]]</span>
+					<span class="board-udate">[[${review.UDate != null ? '수정됨' : ''} ]]</span>
+				</div>
+				
+				<div class="board-info">
+					<img th:src="${review.profileImg}" class="board-info__img">
+					<div style="flex-direction: column; flex-grow: 1;">
+						<div style="display: flex; justify-content: space-between; align-items: center;">
+							<a th:href="@{/member/detail?id=} + ${review.writerNo}"><span class="board-writer">[[ ${review.writer} ]]</span></a>
+							<span th:if="${userId == review.writerId}">
+								<a class="board-change_btn" style="cursor: pointer;" onclick="goChangePage();">수정</a>
+								<a class="board-delete_btn" style="cursor: pointer;" onclick="deleteBoard();">삭제</a>
+							</span>
+						</div>
+						<div style="display: flex; justify-content: space-between; align-items: center;">
+							<span class="board-viewCnt1">
+								<span class="board-view">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-4 w-4 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+								</span>
+								[[ ${review.viewCnt} ]]
+							</span>
+							<span th:text="${#temporals.format( review.IDate, 'YYYY/MM/dd HH:mm' )}"></span>
+							<span></span>
+						</div>
+					</div>
+				</div>
+				<div class="board-contents">
+					<p class="board-content" th:utext="${review.content}" style="display: none;"></p>
+				</div>
+			</section>
+		</div>
+
+		<!-- 댓글 리스트 -->
+		<div class="box-content">
+			<div class="card-content">
+				<div class="clearfix comment-main">
+					<span class="box-title pull-left comment-main-name">
+						<span th:text="${comment}"></span>개의 댓글
+					</span>
+				</div>
+
+				<form class="form-horizontal form-view" onsubmit="return false;">
+					<div class="comment-write">
+						<div class="comment-input-group">
+							<textarea sec:authorize="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_USER')" id="content" class="form-control comment-input" placeholder="댓글은 누구나 편안하게 남겨주세요."></textarea><br>
+							<textarea sec:authorize="hasRole('ROLE_GUEST')" id="content" class="form-control comment-input" disabled="disabled"></textarea><br>
+							<div class="write-star">
+								<span class="star-name">별점</span>
+								<span id="star" class="star">
+									★★★★★
+									<span>★★★★★</span>
+									<input id="rating" type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
+								</span>
+								<button sec:authorize="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_USER')" class="btn btn-primary free-btn" th:onclick="insertComment([[ ${review.id} ]]);">댓글작성</button>
+							</div>
+							<span sec:authorize="hasRole('ROLE_GUEST')" style="display: inline-flex; align-items: center; transform: translate(10%, -310%);">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5 shrink-0 text-gray-400 group-hover:text-gray-500">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
+								<span style="margin-left: .25rem;"> 댓글을 쓰려면 <a th:onclick="goSettings([[ ${userId} ]]);" style="color: blue; text-decoration: underline; cursor: pointer;">이메일 인증</a>이 필요합니다.</span>
+							</span>
+						</div>
+						<div class="comment-input-btn"></div>
+					</div>
+					<ul class="notice-list comment-list"></ul>
+				</form>
+			</div>
+		</div>
+	</main>
+	
+	<!-- REVIEW_DETAIL : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- SETTINGS -->
+		<script th:inline="javascript">
+			var referer = [[ ${referer} ]];
+			var certified = [[ ${certified} ]];
+			var role = [[ ${role} ]];
+			var id = [[ ${review.id} ]];
+			var userId = [[ ${userId} ]];
+			var comment_uri = [[ @{/comments/} ]];
+			var boardId = [[ ${review.id} ]];
+			var printCommentList_uri = [[ @{/comments/} + ${review.id} ]];
+			var insertLikes_uri = [[ @{/review/likes} ]];
+			var boardSeq = [[ ${board.boardSeq} ]];
+			var privateYn = [[ ${board.privateYn} ]];
+		</script>
+		<!-- BOARD -->
+		<script type="text/javascript" src="/js/lib/ckeditor.js"></script>
+		<script type="text/javascript" src="/js/lib/config.js"></script>
+		<script type="text/javascript" src="/js/lib/image.js"></script>
+		<script type="text/javascript" src="/js/lib/ko.js"></script>
+		<script type="text/javascript" src="/js/lib/moment.js"></script>
+		<script type="text/javascript" src="/js/app/board/board.js"></script>
+		<script type="text/javascript" src="/js/app/board/review/detail.js"></script>
+		<!-- LOADING -->
+		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
+		<script type="text/javascript" src="/js/app/loading.js"></script>
+	</th:block>
+
+
+</body>
+
+</html>

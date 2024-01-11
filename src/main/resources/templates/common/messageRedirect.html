@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ</title>
+
+<th:block layout:fragment="css">
+	<!-- RESET, DEFAULT -->
+	<link rel="stylesheet" th:href="@{/css/app/common/reset.css}" />
+	<link rel="stylesheet" th:href="@{/css/lib/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/index/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/common/default.css}" />
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/popup.css}" />
+</th:block>
+
+</head>
+
+<body>
+	
+	<div layout:fragment="content">
+		<form th:if="${not #maps.isEmpty( message.data )}" id="redirectForm" th:action="${message.redirectUri}" th:method="${message.method}" style="display: none;">
+			<input th:each="key, status : ${message.data.keySet()}" type="hidden" th:name="${key}" th:value="${message.data.get(key)}" />
+		</form>
+	</div>
+    
+    <th:block layout:fragment="script">
+		<!-- Jquery, Bootstrap -->
+		<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/lib/bootstrap.min.js"></script>
+		<!-- SWEETALERT2 -->
+		<script type="text/javascript" src="/js/lib/sweetalert2.js"></script>
+		<!-- BOARD -->
+		<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
+		<script type="text/javascript" src="/js/app/board.js"></script>
+		<script th:inline="javascript">
+	    /* <![CDATA[ */
+	    	window.onload = () => {
+	    		const message = [[ ${message.message} ]];
+	    		if (message) {
+	    			alert(message);
+	    		}
+	    		
+	    		const form = document.getElementById('redirectForm');
+	    		if (form) {
+	    			form.submit();
+	    			return false;
+	    		}
+	    		
+	    		const redirectUri = [[ ${message.redirectUri} ]];
+	    		location.href = redirectUri;
+	    	}
+	    /* ]]> */
+		</script>
+	</th:block>
+    
+	
+</body>
+
+</html>

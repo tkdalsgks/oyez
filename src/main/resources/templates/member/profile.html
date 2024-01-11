@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, All That Community</title>
+
+<th:block layout:fragment="css">
+	<!-- RESET, DEFAULT -->
+	<link rel="stylesheet" th:href="@{/css/app/common/reset.css}" />
+	<link rel="stylesheet" th:href="@{/css/lib/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/index/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/common/default.css}" />
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+	<!-- SETTINGS -->
+	<link rel="stylesheet" th:href="@{/css/app/settings/settings.css}" />
+</th:block>
+
+</head>
+<body>
+	
+	<!-- MEMBER PROFILE : CONTENT -->
+	<main layout:fragment="content" class="container">
+		<div class="aside">
+			<aside>
+				<span class="aside-title">내 계정</span>
+				<nav class="aside-subtitle">
+					<a th:onclick="goProfile([[ ${memberId} ]]);" class="aside-subtitle1" style="background: hsla(220,9%,46%,.25); border-radius: .5rem;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="text-gray-600 dark:text-gray-400 -ml-1 mr-3 h-6 w-6 shrink-0 group-hover:text-gray-800 dark:group-hover:text-gray-200"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+						<span>회원 정보</span>
+					</a>
+					<a th:onclick="goAccount([[ ${memberId} ]]);" class="aside-subtitle2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class=" text-gray-400 dark:text-gray-600 -ml-1 mr-3 h-6 w-6 shrink-0 group-hover:text-gray-800 dark:group-hover:text-gray-200"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"></path></svg>
+						<span>계정</span>
+					</a>
+				</nav>
+			</aside>
+			
+			<!-- profile -->
+			<div id="settings-profile" class="profile">
+				<div class="profile-input">
+					<span class="aside-title">
+						회원 정보<span class="aside-title1">* 회원정보를 변경하려면 이메일 인증이 필요합니다.</span>
+					</span>
+					<div class="profile-contents">
+						<div class="profile-contents1">
+							<input type="hidden" id="memberId" name="memberId" th:value="${memberId}">
+							<input type="hidden" id="provider" name="provider" th:value="${provider}">
+							<label class="profile-nickname">닉네임</label>
+							<div>
+								<input id="memberNickname" name="memberNickname" th:value="${memberName}">
+							</div>
+							<label class="profile-email">이메일</label>
+							<div style="display: flex;">
+								<input id="memberEmail" name="memberEmail" th:value="${memberEmail}" th:if="${provider == 'general'}">
+								<input id="memberEmail" name="memberEmail" th:value="${memberEmail}" th:if="${provider != 'general'}" disabled="disabled">
+								<button type="button" id="check-email" class="profile-check-email">이메일 인증</button>
+							</div>
+							<div id="profile-verify" class="profile-verify">
+								<input type="text" id="check-email-number" class="form-control required" placeholder="인증번호를 입력해주세요." disabled="disabled">
+								<button type="button" id="check-email-verify" class="profile-check-verify" disabled="disabled">
+									<div id="check-email-time" class="check-email-time"></div>
+								</button>
+								
+							</div>
+						</div>
+						<div class="profile-contents2">
+							<img th:src="${profileImg}" id="memberProfileImg" style="border: 3px solid #EDEDED;">
+							
+							<form name="profileUploadForm" method="post" enctype="multipart/form-data">
+								<label class="file-label" for="upload">업로드</label>
+								<input type="file" onchange="profileUpload();" id="upload" name="upload" class="form-control" style="display: none;" accept=".jpg, .jpeg, .png">
+							</form>				
+						</div>
+					</div>
+				</div>
+				<div class="profile-line"></div>
+				<div class="profile-info">
+					<div>
+						<span class="aside-title">이메일 수신동의</span>
+						<div>
+							<span class="info-contents">OYEZ에서 주최하는 다양한 이벤트, 정보성 뉴스레터 및 광고 수신여부를 설정할 수 있습니다.</span>
+						</div>
+					</div>
+					<br>
+					<div>
+						<span class="info-title">뉴스레터 및 마케팅 메일 수신</span>
+						<div>
+							<span class="info-contents">유저가 만드는 다양한 컨텐츠를 뉴스레터로 받습니다.</span>
+						</div>
+					</div>
+				</div>
+				<div class="profile-line"></div>
+				<div class="profile-save">
+					<button id="saveProfile" th:onclick="updateProfile([[ ${memberId} ]]);" disabled="disabled">저장</button>
+				</div>
+			</div>
+		</div>
+	</main>
+	
+	<!-- MEMBER PROFILE : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- SETTINGS -->
+		<script th:inline="javascript">
+			var certified = [[ ${certified} ]]
+			var memberNickname = [[ ${memberName} ]]
+			var memberEmail = [[ ${memberEmail} ]]
+			var role = [[ ${role} ]]
+			var updateProfile_uri = [[ @{/api/v1/} + ${memberId} + @{/profile} ]]
+		</script>
+		<!-- MEMBER -->
+		<script type="text/javascript" src="/js/app/member/profile.js"></script>
+		<!-- LOADING -->
+		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
+		<script type="text/javascript" src="/js/app/loading.js"></script>
+	</th:block>
+	
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, All That Community</title>
+
+<th:block layout:fragment="css">
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+</th:block>
+
+</head>
+
+<body>
+	
+	<!-- MAIN : CONTENT -->
+	<main layout:fragment="content" class="container">
+		<div class="main">
+			<img src="/img/upload/main_image.jpg" style="width: 75%">
+		</div>
+	</main>
+	
+	<!-- MAIN : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- SETTINGS -->
+		<script th:inline="javascript">
+			var certified = [[ ${certified} ]]
+			var memberId = [[ ${memberId} ]]
+			var role = [[ ${role} ]]
+		</script>
+		<script type="text/javascript" src="/js/app/main.js"></script>
+	</th:block>
+	
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:fragment="header2">
+	
+	<div sec:authorize="isAuthenticated()" id="header-mobile" class="header-mobile2">
+		<nav class="navbar navbar-expand-lg bg-body-tertiary header-mobile-nav">
+			<div class="navbar-collapse" id="navbarText">
+				<a class="navbar-brand-logo" th:href="@{/}" style="margin: 0 auto;"><img src="/img/app/common/logo.png"></a>
+				
+				<!-- <div style="display: flex; flex-direction: inherit;">
+					<div id="show__chat" class="menu-trigger" onclick="openChatRoom();">
+						<img src="/img/app/chat/chat-icon.svg" style="width: 1.5rem;">
+					</div>
+					<div id="show__menu" class="menu-trigger">
+						<div class="line1"></div>
+						<div class="line2"></div>
+						<div class="line3"></div>
+					</div>
+				</div> -->
+				
+			</div>
+		</nav>
+	</div>
+	
+	<script th:inline="javascript">
+		function goProfile(userId) {
+			location.href = '/' + `${userId}` + '/profile';
+		}
+	</script>
+</header>

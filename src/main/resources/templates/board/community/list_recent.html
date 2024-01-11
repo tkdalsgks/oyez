@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, 오늘 하루,</title>
+
+<th:block layout:fragment="css">
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+	<!-- BOARD -->
+	<link rel="stylesheet" th:href="@{/css/app/board/board.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/button.css}" />
+	
+	<link rel="stylesheet" th:href="@{/css/app/loading.css}" />
+</th:block>
+
+</head>
+
+<body>
+	
+	<!-- COMMUNITY_LIST : CONTENT -->
+	<main layout:fragment="content" class="container">
+		
+		<div class="content">
+			<section>
+				<div class="list__headerBox">
+					<div class="list__searchBox">
+						<div class="list__search">
+							<a th:href="@{/trend/week}">
+								<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1.85rem" width="1.85rem" xmlns="http://www.w3.org/2000/svg">
+									<path fill="none" d="M0 0h24v24H0z"></path><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"></path>
+								</svg>
+								<span>트렌딩</span>
+							</a>
+							<a th:href="@{/recent}">
+								<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1.5rem" width="1.5rem" xmlns="http://www.w3.org/2000/svg">
+									<path fill="none" d="M0 0h24v24H0z"></path><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+								</svg>
+								<span>최신</span>
+							</a>
+							<div onclick="searchBox();">
+								<svg stroke="currentColor" fill="currentColor" troke-width="0" viewBox="0 0 50 50" width="1.35rem" height="1.35rem" xmlns="http://www.w3.org/2000/svg">
+									<path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
+								</svg>
+								<span>검색</span>
+							</div>
+						</div>
+						<div class="list__writeBox">
+							<button type="button" sec:authorize="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_MEMBER')" class="write_box" onclick="writeBoard();"><i class="fas fa-pen"></i><span class="skip_info"></span></button>
+						</div>
+					</div>
+				</div>
+				<div id="searchBox" class="search_box">
+					<form id="searchForm" onsubmit="return false;" autocomplete="off">
+						<div class="sch_group fl">
+							<div>
+								<select id="searchType" name="searchType" title="검색 유형 선택">
+									<option value="">전체 검색</option>
+									<option value="title">제목</option>
+									<option value="content">내용</option>
+									<option value="writer">작성자</option>
+								</select>
+								<input type="text" id="keyword" name="keyword" onkeyup="enterkey();" placeholder="키워드를 입력해 주세요." title="키워드 입력" />
+							</div>
+						</div>
+					</form>
+				</div>
+				
+				<!-- 리스트 출력 -->
+				<ul class="list_grid postGrid" id="list"></ul>
+				<div id="no-list"></div>
+				
+			</section>
+		</div>
+	</main>
+	
+	<!-- FREE_LIST : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- SETTINGS -->
+		<script th:inline="javascript">
+			var certified = [[ ${certified} ]];
+			var memberId = [[ ${memberId} ]];
+			var role = [[ ${role} ]];
+			var commuCnt = [[ ${commuCnt} ]];
+		</script>
+		<!-- BOARD -->
+		<script type="text/javascript" src="/js/lib/moment.js"></script>
+		<script type="text/javascript" src="/js/app/board/board.js"></script>
+		<script type="text/javascript" src="/js/app/board/community/list.js"></script>
+		<script type="text/javascript" src="/js/app/board/community/list_recent.js"></script>
+		<!-- LOADING -->
+		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
+		<script type="text/javascript" src="/js/app/loading.js"></script>
+	</th:block>
+	
+</body>
+
+</html>

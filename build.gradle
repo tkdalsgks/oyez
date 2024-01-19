@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'kr'
-version = '0.0.1-SNAPSHOT'
+version = 'webservice'
 
 java {
 	sourceCompatibility = '17'
@@ -53,7 +53,11 @@ dependencies {
 	/* Sql log */
 	implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 	
+	/* Gson */
 	implementation 'com.google.code.gson:gson'
+	
+	/* Jaxb */
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 	
 	/* Querydsl */
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

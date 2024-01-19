@@ -1,10 +1,12 @@
 package kr.oyez.board.community.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +15,11 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import kr.oyez.board.community.dto.CommunityResponseDto;
 import kr.oyez.board.community.service.CommunityService;
+import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.board.review.service.ReviewService;
 import kr.oyez.comment.service.CommentService;
-import kr.oyez.common.dto.MessageDto;
-import kr.oyez.common.utils.StringUtils;
+import kr.oyez.common.domain.Common;
+import kr.oyez.common.service.CommonService;
 import kr.oyez.likes.service.LikesService;
 import kr.oyez.member.domain.MemberCertified;
 import kr.oyez.member.dto.SessionMember;
@@ -30,10 +33,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CommunityController {
 	
+	private final CommonService commonService;
 	private final SecurityService securityService;
 	private final MemberService memberService;
 	private final CommunityService communityService;
-	private final ReviewService reviewBoardService;
+	private final ReviewService reviewService;
 	private final CommentService commentService; 
 	private final LikesService likesService;
 	
@@ -70,8 +74,8 @@ public class CommunityController {
 				model.addAttribute("profileImg", sessionMember.getProfileImg());
 			}
 			
-			// 커뮤니티 게시글 갯수 - 최신
-			Long board = communityService.countBoardRecent();
+			// 커뮤니티 게시글 갯수 - 트렌드
+			Long board = communityService.countBoardTrend();
 			model.addAttribute("commuCnt", board);
 			
 			return "board/community/list_trend";
@@ -81,7 +85,7 @@ public class CommunityController {
 	}
 	
 	/**
-	 * 커뮤니티 리스트 - 트렌드
+	 * 커뮤니티 리스트 - 최신
 	 */
 	@GetMapping("/recent")
 	public String list_recent(Model model) {
@@ -111,8 +115,8 @@ public class CommunityController {
 				model.addAttribute("profileImg", sessionMember.getProfileImg());
 			}
 			
-			// 커뮤니티 게시글 갯수 - 트렌드
-			Long board = communityService.countBoardTrend();
+			// 커뮤니티 게시글 갯수 - 최신
+			Long board = communityService.countBoardRecent();
 			model.addAttribute("commuCnt", board);
 			
 			return "board/community/list_recent";
@@ -184,58 +188,93 @@ public class CommunityController {
 				model.addAttribute("profileImg", sessionMember.getProfileImg());
 			}
 			
-			CommunityResponseDto board = communityService.findByBoard(id);
-			System.out.println("@@@@@@@@@@@@@@@@@@@@ " + board);
-			//Likes likes = new Likes();
-			
-			if(board != null) {	
-				System.out.println("!!!!!!!!!!!!!!!!!!!! " + board);
-				model.addAttribute("board", board);
+			// 게시글 타입
+			String boardSeq = communityService.findByBoardSeq(id);
+			if("1".equals(boardSeq)) {
+				// 커뮤니티 게시판
+				CommunityResponseDto board = communityService.findByBoard(id);
 				
-				//likes.setBoardId(board.getId());
-				//likes.setUserId(sessionMember.getMemberId());
+				//Likes likes = new Likes();
 				
-				Long comment = commentService.countComment(id);
-				//int likesAll = likesService.selectLikes(likes);
-				
-				if(comment != 0) {
-					model.addAttribute("comment", comment);
-				} else {
-					model.addAttribute("comment", "0");
+				if(board != null) {
+					model.addAttribute("board", board);
+					
+					//likes.setBoardId(board.getId());
+					//likes.setUserId(sessionMember.getMemberId());
+					
+					Long comment = commentService.countComment(id);
+					//int likesAll = likesService.selectLikes(likes);
+					
+					if(comment != 0) {
+						model.addAttribute("comment", comment);
+					} else {
+						model.addAttribute("comment", "0");
+					}
+					
+					/*
+					if(likesAll != 0) {
+						model.addAttribute("likesAll", likesAll);
+					} else {
+						model.addAttribute("likesAll", likesAll);
+					}
+					
+					if(likesService.findLikes(likes) == 0) {
+						model.addAttribute("likes", 0);
+					} else {
+						model.addAttribute("likes", 1);
+					}
+					*/
 				}
+			} else if("2".equals(boardSeq)) {
+				// 리뷰 게시판
+				ReviewResponseDto board = reviewService.findByBoard(id);
 				
-				/*
-				if(likesAll != 0) {
-					model.addAttribute("likesAll", likesAll);
-				} else {
-					model.addAttribute("likesAll", likesAll);
-				}
+				//Likes likes = new Likes();
 				
-				if(likesService.findLikes(likes) == 0) {
-					model.addAttribute("likes", 0);
-				} else {
-					model.addAttribute("likes", 1);
+				if(board != null) {
+					model.addAttribute("board", board);
+					
+					//likes.setBoardId(board.getId());
+					//likes.setUserId(sessionMember.getMemberId());
+					
+					Long comment = commentService.countComment(id);
+					//int likesAll = likesService.selectLikes(likes);
+					
+					if(comment != 0) {
+						model.addAttribute("comment", comment);
+					} else {
+						model.addAttribute("comment", "0");
+					}
+					
+					/*
+					if(likesAll != 0) {
+						model.addAttribute("likesAll", likesAll);
+					} else {
+						model.addAttribute("likesAll", likesAll);
+					}
+					
+					if(likesService.findLikes(likes) == 0) {
+						model.addAttribute("likes", 0);
+					} else {
+						model.addAttribute("likes", 1);
+					}
+					*/
 				}
-				*/
-			} else {
-				MessageDto message = new MessageDto("존재하지 않거나 이미 삭제된 게시글입니다.", "/community", RequestMethod.POST, null);
-				return StringUtils.showMessageAndRedirect(message, model);
 			}
 		}
 		
 		return "board/community/detail";
 	}
 	
-	/*
 	/**
 	 * 게시글 작성 페이지
-	 
+	 */
 	@GetMapping("/community/write")
-	public String write(@PathVariable(value = "boardId") Long id, ReviewFilterDto filterDto, Model model) {
+	public String write(@RequestParam(value = "boardId", required = false) Long id, Model model) {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Write");
+			log.info("@@@ [COMMUNITY] Search List");
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -259,12 +298,12 @@ public class CommunityController {
 			}
 			
 			if(id != null) {
-				FreeBoardResponseDto board = freeBoardService.findByBoardId(id);
+				CommunityResponseDto board = communityService.findByBoard(id);
 				model.addAttribute("board", board);
 			}
 			
 			// 게시글 필터
-			List<ReviewFilterDto> filter = reviewBoardService.reviewFilter(filterDto);
+			List<Common> filter = commonService.communityFilter();
 			model.addAttribute("filter", filter);
 			
 			return "board/community/write";
@@ -275,14 +314,14 @@ public class CommunityController {
 	
 	/**
 	 * 게시글 수정 페이지
-	 
-	@GetMapping("/{boardId}/modify")
-	public String change(@PathVariable(value = "boardId") Long id, ReviewFilterDto filterDto, Model model) {
+	 */
+	@GetMapping("/posts/{boardId}/modify")
+	public String change(@PathVariable(value = "boardId") Long id, Model model) {
 		log.info("@@@ [COMMUNITY] Modify board_id {}", id);
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [MAIN]");
+			log.info("@@@ [COMMUNITY] Search List");
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -305,25 +344,39 @@ public class CommunityController {
 				model.addAttribute("profileImg", sessionMember.getProfileImg());
 			}
 			
-			FreeBoardResponseDto board = new FreeBoardResponseDto();
-			
-			if(id != null) {
-				board = freeBoardService.findByBoardId(id);
-				model.addAttribute("board", board);
-			}
-			
-			// 게시글 필터
-			List<ReviewFilterDto> filter = reviewBoardService.reviewFilter(filterDto);
-			model.addAttribute("filter", filter);
-			
-			if("1".equals(board.getBoardSeq())) {
+			// 게시글 타입
+			String boardSeq = communityService.findByBoardSeq(id);
+			if("1".equals(boardSeq)) {
+				// 커뮤니티 게시판
+				CommunityResponseDto board = new CommunityResponseDto();			
+				
+				if(id != null) {
+					board = communityService.findByBoard(id);
+					model.addAttribute("board", board);
+				}
+				
+				// 게시글 필터
+				List<Common> filter = commonService.communityFilter();
+				model.addAttribute("filter", filter);
+				
 				return "board/community/modify";
-			} else {
+			} else if("2".equals(boardSeq)) {
+				// 리뷰 게시판
+				ReviewResponseDto board = new ReviewResponseDto();
+				
+				if(id != null) {
+					board = reviewService.findByBoard(id);
+					model.addAttribute("board", board);
+				}
+				
+				// 게시글 필터
+				List<Common> filter = commonService.reviewFilter();
+				model.addAttribute("filter", filter);
+				
 				return "board/review/modify";
 			}
-		} else {
-			return "index";
 		}
+		
+		return "index";
 	}
-	*/
 }

@@ -88,7 +88,7 @@ function goViewPage(id) {
 function privatePageList(id) {
 	list.forEach(function(value) {
 		if(value.id == id) {
-			if(userId == value.writerId) {
+			if(memberId == value.memberId) {
 				toastr.options = {
 					progressBar: true,
 				 	showMethod: 'slideDown',
@@ -112,7 +112,7 @@ function privatePageList(id) {
 function privatePageLikes(id) {
 	likes.forEach(function(value) {
 		if(value.id == id) {
-			if(userId == value.writerId) {
+			if(memberId == value.memberId) {
 				toastr.options = {
 					progressBar: true,
 				 	showMethod: 'slideDown',
@@ -136,7 +136,7 @@ function privatePageLikes(id) {
 function privatePageNotice(id) {
 	notice.forEach(function(value) {
 		if(value.id == id) {
-			if(userId == value.writerId) {
+			if(memberId == value.memberId) {
 				toastr.options = {
 					progressBar: true,
 				 	showMethod: 'slideDown',

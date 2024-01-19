@@ -1,5 +1,7 @@
 package kr.oyez.board.review.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,8 @@ import lombok.Setter;
 public class ReviewRequestDto {
 
 	private Long id;
+	
+	private Long boardId;
 	
 	private String title;
 	
@@ -16,15 +20,32 @@ public class ReviewRequestDto {
 	
 	private String writer;
 	
-	private Boolean noticeYn;
+	private String titleImg;
+	
+	private String noticeYn;
 	
 	private String privateYn;
 	
+	private String filterCd;
+	
 	private String filter;
 	
-	private String filterId;
-	
-	private String boardId;
-	
 	private String hashtag;
+
+	@QueryProjection
+	public ReviewRequestDto(Long id, Long boardId, String title, String content, String writerId, String writer,
+			String titleImg, String noticeYn, String privateYn, String filterCd, String filter, String hashtag) {
+		this.id = id;
+		this.boardId = boardId;
+		this.title = title;
+		this.content = content;
+		this.writerId = writerId;
+		this.writer = writer;
+		this.titleImg = titleImg;
+		this.noticeYn = noticeYn;
+		this.privateYn = privateYn;
+		this.filterCd = filterCd;
+		this.filter = filter;
+		this.hashtag = hashtag;
+	}
 }

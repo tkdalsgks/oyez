@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import kr.oyez.board.community.domain.Board;
+import kr.oyez.board.community.dto.CommunityRequestDto;
 import kr.oyez.board.community.dto.CommunityResponseDto;
 import kr.oyez.board.community.repository.CommunityRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,21 @@ public class CommunityService {
 	public Long countHits(Long id) {
 		
 		return communityRepository.countHits(id);
+	}
+
+	public void save(Board params) {
+		
+		communityRepository.save(params);
+	}
+
+	public String findByBoardSeq(Long id) {
+		
+		return communityRepository.findByBoardSeq(id);
+	}
+
+	public void updateBoard(CommunityRequestDto params) {
+		
+		communityRepository.updateBoard(params);
 	}
 	
 	/*

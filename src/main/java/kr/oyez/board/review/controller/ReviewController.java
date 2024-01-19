@@ -5,14 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import kr.oyez.board.community.dto.CommunityResponseDto;
 import kr.oyez.board.review.dto.ReviewResponseDto;
-import kr.oyez.board.review.dto.ReviewFilterDto;
 import kr.oyez.board.review.service.ReviewService;
-import kr.oyez.common.dto.SearchDto;
+import kr.oyez.common.domain.Common;
+import kr.oyez.common.service.CommonService;
 import kr.oyez.member.domain.MemberCertified;
 import kr.oyez.member.dto.SessionMember;
 import kr.oyez.member.service.MemberService;
@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ReviewController {
 	
+	private final CommonService commonService;
 	private final SecurityService securityService;
 	private final MemberService memberService;
 	private final ReviewService reviewService;
@@ -77,14 +78,13 @@ public class ReviewController {
 	
 	/**
 	 * 게시글 작성 페이지
-	 
+	 */
 	@GetMapping("/review/write")
-	public String write(@RequestParam(value = "id") final Long id, ReviewFilterDto filterDto, Model model) {
-		log.info("##### Board Page Write __ Call " + id + " #####");
+	public String write(@RequestParam(value = "boardId", required = false) Long id, Model model) {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [MAIN]");
+			log.info("@@@ [COMMUNITY] Search List");
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -108,13 +108,12 @@ public class ReviewController {
 			}
 			
 			if(id != null) {
-				ReviewBoardResponseDto review = reviewBoardService.findByReviewId(id);
-				model.addAttribute("review", review);
-				
+				ReviewResponseDto board = reviewService.findByBoard(id);
+				model.addAttribute("board", board);
 			}
 			
 			// 게시글 필터
-			List<ReviewFilterDto> filter = reviewBoardService.reviewFilter(filterDto);
+			List<Common> filter = commonService.reviewFilter();
 			model.addAttribute("filter", filter);
 			
 			return "board/review/write";
@@ -122,5 +121,4 @@ public class ReviewController {
 			return "index";
 		}
 	}
-	*/
 }

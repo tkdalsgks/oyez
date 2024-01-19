@@ -21,7 +21,11 @@ public class CommunityResponseDto {
 	
 	private String writer;
 	
+	private String titleImg;
+	
 	private String profileImg;
+	
+	private String filterCd;
 	
 	private String filter;
 	
@@ -45,16 +49,17 @@ public class CommunityResponseDto {
 
 	@QueryProjection
 	public CommunityResponseDto(long id, String boardSeq, String title, String content, String writerId, String writer,
-			String profileImg, String filter, int rating, int viewCnt, int commentCnt, int likesCnt, String noticeYn,
-			String privateYn, String useYn, String regDate, String updtDate) {
-		super();
+			String titleImg, String profileImg, String filterCd, String filter, int rating, int viewCnt, int commentCnt,
+			int likesCnt, String noticeYn, String privateYn, String useYn, String regDate, String updtDate) {
 		this.id = id;
 		this.boardSeq = boardSeq;
 		this.title = title;
 		this.content = content;
 		this.writerId = writerId;
 		this.writer = writer;
+		this.titleImg = titleImg;
 		this.profileImg = profileImg;
+		this.filterCd = filterCd;
 		this.filter = filter;
 		this.rating = rating;
 		this.viewCnt = viewCnt;

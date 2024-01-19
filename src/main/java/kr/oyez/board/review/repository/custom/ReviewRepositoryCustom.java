@@ -4,15 +4,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
-import kr.oyez.board.community.domain.Board;
-import kr.oyez.board.community.dto.CommunityResponseDto;
+import kr.oyez.board.review.dto.ReviewResponseDto;
 
 @Repository
 public interface ReviewRepositoryCustom {
 
-	Slice<CommunityResponseDto> findByAll(Pageable pageable);
+	Slice<ReviewResponseDto> findByAll(Pageable pageable);
 	
 	Long countBoard();
+	
+	ReviewResponseDto findByBoard(Long id);
 	
 	//Page<CommunityResponseDto> findNotice(Pageable pageable);
 	

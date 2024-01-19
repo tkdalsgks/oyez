@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layouts/layout}">
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
 
 <head>
 <meta charset="UTF-8">
@@ -32,7 +32,7 @@
 		<div class="content">
 			<input type="hidden" id="writer" name="writer" th:value="${board.writerId}">
 			<input type="hidden" id="writerName" name="writerName" th:value="${board.writer}">
-			<input type="hidden" id="userId" name="userId" th:value="${writerId}">
+			<input type="hidden" id="memberId" name="memberId" th:value="${memberId}">
 			<section>
 				<div class="board-title">
 					<span class="board-title1" id="board-title">[[ ${board.title} ]]</span>

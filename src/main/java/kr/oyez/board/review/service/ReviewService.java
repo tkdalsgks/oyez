@@ -5,7 +5,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import kr.oyez.board.community.domain.Board;
-import kr.oyez.board.community.dto.CommunityResponseDto;
+import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.board.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +15,7 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	
-	public Slice<CommunityResponseDto> findByAll(Pageable pageable) {
+	public Slice<ReviewResponseDto> findByAll(Pageable pageable) {
 		
 		return reviewRepository.findByAll(pageable);
 	}
@@ -23,6 +23,16 @@ public class ReviewService {
 	public Long countBoard() {
 		
 		return reviewRepository.countBoard();
+	}
+	
+	public ReviewResponseDto findByBoard(Long id) {
+		
+		return reviewRepository.findByBoard(id);
+	}
+
+	public void save(Board params) {
+		
+		reviewRepository.save(params);
 	}
 	
 	/*

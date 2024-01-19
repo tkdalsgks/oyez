@@ -15,7 +15,9 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.oyez.board.community.domain.QBoard;
+import kr.oyez.board.community.dto.CommunityRequestDto;
 import kr.oyez.board.community.dto.CommunityResponseDto;
+import kr.oyez.common.domain.QCommon;
 import kr.oyez.common.utils.StringUtils;
 import kr.oyez.member.domain.QMember;
 
@@ -27,6 +29,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 		this.queryFactory = queryFactory;
 	}
 	
+	QCommon common = QCommon.common;
 	QBoard board = QBoard.board;
 	QMember member = QMember.member;
 	
@@ -41,8 +44,10 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 						board.content,
 						board.writerId,
 						member.memberNickname,
+						board.titleImg,
 						member.profileImg,
-						board.filter,
+						common.commDCd,
+						common.commDNm,
 						board.rating,
 						board.viewCnt,
 						board.commentCnt,
@@ -50,14 +55,16 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 						board.noticeYn,
 						board.privateYn,
 						board.useYn,
-						regDate(),
-						updtDate()
+						regDateTime(),
+						updtDateTime()
 						))
 				.leftJoin(member).on(board.writerId.eq(member.memberId))
+				.leftJoin(common).on(board.filter.eq(common.commDCd))
 				.where(
 						boardSeqEq("1"),
 						useYnEq("Y"),
-						regDate().between(StringUtils.dateMinus30(), StringUtils.date())
+						regDate().between(StringUtils.dateMinus30(), StringUtils.date()),
+						common.commHCd.eq("B01")
 				)
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -87,8 +94,10 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 						board.content,
 						board.writerId,
 						member.memberNickname,
+						board.titleImg,
 						member.profileImg,
-						board.filter,
+						common.commDCd,
+						common.commDNm,
 						board.rating,
 						board.viewCnt,
 						board.commentCnt,
@@ -96,13 +105,15 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 						board.noticeYn,
 						board.privateYn,
 						board.useYn,
-						regDate(),
-						updtDate()
+						regDateTime(),
+						updtDateTime()
 						))
 				.leftJoin(member).on(board.writerId.eq(member.memberId))
+				.leftJoin(common).on(board.filter.eq(common.commDCd))
 				.where(
 						boardSeqEq("1"),
-						useYnEq("Y")
+						useYnEq("Y"),
+						common.commHCd.eq("B01")
 				)
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -119,6 +130,17 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 		
 		return PageableExecutionUtils.getPage(content, pageable, total::fetchOne);
 	}
+	
+	@Override
+	public String findByBoardSeq(Long id) {
+		
+		return queryFactory.from(board)
+				.select(board.boardSeq)
+				.where(
+						board.id.eq(id)
+				)
+				.fetchOne();
+	}
 
 	@Override
 	public CommunityResponseDto findByBoard(Long id) {
@@ -131,8 +153,10 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 						board.content,
 						board.writerId,
 						member.memberNickname,
+						board.titleImg,
 						member.profileImg,
-						board.filter,
+						common.commDCd,
+						common.commDNm,
 						board.rating,
 						board.viewCnt,
 						board.commentCnt,
@@ -140,13 +164,15 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 						board.noticeYn,
 						board.privateYn,
 						board.useYn,
-						regDate(),
-						updtDate()
+						regDateTime(),
+						updtDateTime()
 						))
 				.leftJoin(member).on(board.writerId.eq(member.memberId))
+				.leftJoin(common).on(board.filter.eq(common.commDCd))
 				.where(
 						board.id.eq(id),
-						useYnEq("Y")
+						useYnEq("Y"),
+						common.commHCd.eq("B01")
 				)
 				.fetchOne();
 		
@@ -190,7 +216,30 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 				.execute();
 	}
 	
+	@Override
+	public Long updateBoard(CommunityRequestDto params) {
+		
+		return queryFactory
+				.update(board)
+				.set(board.title, params.getTitle())
+				.set(board.content, params.getContent())
+				.set(board.updtDate, StringUtils.dateTime())
+				.where(
+						board.id.eq(params.getBoardId())
+				)
+				.execute();
+	}
+	
 	private DateTemplate<String> regDate() {
+		DateTemplate<String> formattedDate = Expressions.dateTemplate(
+                String.class
+                , "DATE_FORMAT({0}, {1})"
+                , board.regDate
+                , ConstantImpl.create("%Y%m%d"));
+		return formattedDate;
+	}
+	
+	private DateTemplate<String> regDateTime() {
 		DateTemplate<String> formattedDate = Expressions.dateTemplate(
                 String.class
                 , "DATE_FORMAT({0}, {1})"
@@ -199,7 +248,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 		return formattedDate;
 	}
 	
-	private DateTemplate<String> updtDate() {
+	private DateTemplate<String> updtDateTime() {
 		DateTemplate<String> formattedDate = Expressions.dateTemplate(
                 String.class
                 , "DATE_FORMAT({0}, {1})"

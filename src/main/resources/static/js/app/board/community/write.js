@@ -2,7 +2,7 @@ ClassicEditor
     .create( document.querySelector( '#content' ), {
         extraPlugins: [uploadAdapterPlugin],
         language: 'ko',
-        ckfinder: { uploadUrl: '/upload' }
+        ckfinder: { uploadUrl: '/api/v1/upload' }
     })
     .then( editor => {
     	window.ckeditor = editor;
@@ -23,7 +23,7 @@ window.onload = () => {
 
 // 등록일 초기화
 function initIDate() {
-	document.getElementById('IDate').value = moment().format('YYYY/MM/DD');
+	document.getElementById('regDate').value = moment().format('YYYY/MM/DD');
 }
 
 // 게시글 상세정보 렌더링
@@ -36,10 +36,11 @@ function renderBoardInfo() {
 	const form = document.getElementById('saveForm');
 	const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
 	form.isNotice.checked = board.noticeYn;
-	form.IDate.value = moment(board.IDate).format('YYYY/MM/DD HH:mm');
+	form.regDate.value = moment(board.regDate).format('YYYY/MM/DD HH:mm');
 	
 	fields.forEach(field => {
 		form[field].value = board[field];
+		console.log(form[field].value)
 	});
 }
 
@@ -49,6 +50,9 @@ function saveBoard() {
 	const form = document.getElementById('saveForm');
 	const filter = $("#filter option:selected").val();
 	const hashtag = document.getElementById('hashtag');
+	
+	const title = document.getElementById('title');
+	const titleImg = document.getElementById('titleImg');
 	
 	const fields = [form.title, form.writer];
 	const fieldNames = ['제목', '이름'];
@@ -70,14 +74,43 @@ function saveBoard() {
 			return false;
 		} else {
 			if(board == null) {
-				savePoints();
+				//savePoints();
 			}
-			document.getElementById('saveBtn').disabled = true;
-			form.noticeYn.value = form.isNotice.checked;
-			form.filterId.value = filter;
-			form.hashtag.value = hashtag.value;
-			form.action = saveBoard_formAction;
-			form.submit();
+			
+			var path = saveBoard_formAction;
+			var data = JSON.stringify({ 
+				"title": title.value, 
+				"content": ckeditor.getData(),
+				//"titleImg": titleImg.value,
+				"noticeYn": noticeYn.value,
+				"memberId": memberId,
+				"filter": filter,
+				"hashtag": hashtag.value 
+			});
+			
+			$.ajax({
+				url: path,
+				type: 'POST',
+				contentType: 'application/json',
+				data: data,
+				success: function(res) {
+					swal.fire({
+						title: '게시글이 작성되었습니다.',
+						icon: 'warning',
+						confirmButtonColor: '#3085d6',
+						confirmButtonText: '확인',
+					}).then((result) => {
+						if(result.isConfirmed) {
+							console.log(JSON.stringify(res))
+							//location.href = "javascript:history.go(-1)";
+						}
+					});
+				},
+				error: function(res) {
+					alert(2)
+					console.log(JSON.stringify(res))
+				}
+			})
 		}
 	}
 }
@@ -106,12 +139,12 @@ function savePoints() {
 	var points = "100";
 	
 	var headers = { "Content-Type": "application/json", "X-HTTP-Method-Override": "POST" };
-	var params = { "pointsCd": pointsCd, "points": points, "userId": userId };
+	var params = { "pointsCd": pointsCd, "points": points, "memberId": memberId };
 	
 	//console.log("params : " + JSON.stringify(params));
 	
 	$.ajax({
-		url: "/points",
+		url: "/api/v1/points",
 		type: "POST",
 		headers: headers,
 		dataType: "JSON",

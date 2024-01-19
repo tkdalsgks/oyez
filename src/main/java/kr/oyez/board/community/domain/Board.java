@@ -26,8 +26,10 @@ public class Board {
 	
 	private String content;
 	
-	@Column(name = "member_id")
+	@Column(name = "memberId")
 	private String writerId;
+	
+	private String titleImg;
 	
 	private String filter;
 	

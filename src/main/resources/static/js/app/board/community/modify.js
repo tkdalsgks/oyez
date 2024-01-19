@@ -2,7 +2,7 @@ ClassicEditor
     .create( document.querySelector( '#content' ), {
         extraPlugins: [uploadAdapterPlugin],
         language: 'ko',
-        ckfinder: { uploadUrl: '/upload' }
+        ckfinder: { uploadUrl: '/api/v1/upload' }
     })
     .then( editor => {
     	window.ckeditor = editor;

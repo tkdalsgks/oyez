@@ -10,7 +10,7 @@
 
 <th:block layout:fragment="css">
 	<!-- POPUP -->
-	<link rel="stylesheet" th:href="@{/css/app/popup.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
 	<!-- BOARD -->
 	<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" th:href="@{/css/app/board/board.css}" />
@@ -26,7 +26,7 @@
 		<div class="page_tits">
 			<span class="write-name-a">함께 할 때 더 즐거운 순간,</span><br>
 			<span class="write-name-b">
-				<b>[[ ${user} ]]</b><span class="write-name-c">님 다양한 사람을 만나고 생각의 폭을 넓혀보세요.</span>
+				<b>[[ ${memberName} ]]</b><span class="write-name-c">님 다양한 사람을 만나고 생각의 폭을 넓혀보세요.</span>
 			</span>
 		</div>
 		
@@ -36,7 +36,7 @@
 					<!-- 서버로 전달할 공지글 여부 -->
 					<input type="hidden" id="noticeYn" name="noticeYn" />
 					<input type="hidden" id="filterId" name="filterId" />
-					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${user}" />
+					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${memberName}" />
 					<input type="hidden" id="IDate" name="IDate" class="write-date" />
 					<div>
 						<div class="write-notice">
@@ -44,14 +44,14 @@
 								<span>공지글</span>
 								<span class="chkbox"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"></label></span>
 							</div>
-							<div sec:authorize="hasAnyRole('ROLE_USER')">
+							<div sec:authorize="hasAnyRole('ROLE_MEMBER')">
 								<span class="chkbox" style="display: none;"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"></label></span>
 							</div>
 						</div>
 						<div style="display: flex;">
 							<span class="write-filter">필터</span>
 							<select style="width: 100px; height: 22px; margin-left: .85rem; margin-bottom: 0; padding-left: 0; border: none;" id="filter">
-								<option th:if="${filter.commDCd == '0'}" th:each="filter : ${filter}" th:text="${filter.commDNm}" th:value="${filter.commDCd}" ></option>
+								<option th:each="filter : ${filter}" th:text="${filter.commDNm}" th:value="${filter.commDCd}" ></option>
 							</select>
 						</div>
 						<div>
@@ -79,7 +79,7 @@
 				
 				<p class="btn_set">
 					<button class="write-cancel-btn" onclick="cancelBoard();">취소</button>
-					<button id="saveBtn" class="write-save-btn" onclick="saveBoard();">저장</button>
+					<button type="button" id="saveBtn" class="write-save-btn" onclick="saveBoard();">저장</button>
 				</p>
 			</section>
 		</div>
@@ -92,10 +92,10 @@
 		<!-- SETTINGS -->
 		<script th:inline="javascript">
 			var certified = [[ ${certified} ]];
-			var userId = [[ ${userId} ]];
+			var memberId = [[ ${memberId} ]];
 			var role = [[ ${role} ]];
 			var board = [[ ${board} ]];
-			var saveBoard_formAction = [[ ${board == null} ]] ? '/free/save' : '/free/update';
+			var saveBoard_formAction = [[ ${board == null} ]] ? '/api/v1/community/save' : '/api/v1/community/update';
 			
 			const input = document.querySelector('input[name=hashtags]');
 		    let tagify = new Tagify(input);
@@ -107,7 +107,7 @@
 		<script type="text/javascript" src="/js/lib/ko.js"></script>
 		<script type="text/javascript" src="/js/lib/moment.js"></script>
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
-		<script type="text/javascript" src="/js/app/board/free/write.js"></script>
+		<script type="text/javascript" src="/js/app/board/community/write.js"></script>
 		<script type="text/javascript" src="/js/app/board/uploadAdapter.js"></script>
 		<!-- LOADING -->
 		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>

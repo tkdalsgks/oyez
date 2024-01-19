@@ -66,7 +66,7 @@ function drawList(res) {
 				${row.profileImg != null ? 
 					`<a href="javascript:goViewPage(` + row.id + `);">
 						<div>
-							<img src="/img/app/common/image.gif" class="pb__contentImg">
+							${row.titleImg != null ? `<img src="${row.titleImg}" class="pb__contentImg">` : `` }
 						</div>
 					</a>` : ``
 				}

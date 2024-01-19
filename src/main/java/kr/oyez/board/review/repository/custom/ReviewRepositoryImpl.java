@@ -15,9 +15,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.oyez.board.community.domain.Board;
 import kr.oyez.board.community.domain.QBoard;
-import kr.oyez.board.community.dto.CommunityResponseDto;
+import kr.oyez.board.review.dto.ReviewResponseDto;
+import kr.oyez.common.domain.QCommon;
 import kr.oyez.member.domain.QMember;
 
 public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
@@ -28,22 +28,25 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 		this.queryFactory = queryFactory;
 	}
 	
+	QCommon common = QCommon.common;
 	QBoard board = QBoard.board;
 	QMember member = QMember.member;
 	
 	@Override
-	public Slice<CommunityResponseDto> findByAll(Pageable pageable) {
+	public Slice<ReviewResponseDto> findByAll(Pageable pageable) {
 		
-		List<CommunityResponseDto> content = queryFactory.from(board)
-				.select(Projections.constructor(CommunityResponseDto.class, 
+		List<ReviewResponseDto> content = queryFactory.from(board)
+				.select(Projections.constructor(ReviewResponseDto.class, 
 						board.id,
 						board.boardSeq,
 						board.title,
 						board.content,
 						board.writerId,
 						member.memberNickname,
+						board.titleImg,
 						member.profileImg,
-						board.filter,
+						common.commDCd,
+						common.commDNm,
 						board.rating,
 						board.viewCnt,
 						board.commentCnt,
@@ -51,13 +54,15 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 						board.noticeYn,
 						board.privateYn,
 						board.useYn,
-						regDate(),
-						updtDate()
+						regDateTime(),
+						updtDateTime()
 						))
 				.leftJoin(member).on(board.writerId.eq(member.memberId))
+				.leftJoin(common).on(board.filter.eq(common.commDCd))
 				.where(
 						boardSeqEq("2"),
-						useYnEq("Y")
+						useYnEq("Y"),
+						common.commHCd.eq("B02")
 				)
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -87,7 +92,53 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 				.fetchOne();
 	}
 	
+	@Override
+	public ReviewResponseDto findByBoard(Long id) {
+		
+		ReviewResponseDto content = queryFactory.from(board)
+				.select(Projections.constructor(ReviewResponseDto.class, 
+						board.id,
+						board.boardSeq,
+						board.title,
+						board.content,
+						board.writerId,
+						member.memberNickname,
+						board.titleImg,
+						member.profileImg,
+						common.commDCd,
+						common.commDNm,
+						board.rating,
+						board.viewCnt,
+						board.commentCnt,
+						board.likesCnt,
+						board.noticeYn,
+						board.privateYn,
+						board.useYn,
+						regDateTime(),
+						updtDateTime()
+						))
+				.leftJoin(member).on(board.writerId.eq(member.memberId))
+				.leftJoin(common).on(board.filter.eq(common.commDCd))
+				.where(
+						board.id.eq(id),
+						useYnEq("Y"),
+						common.commHCd.eq("B02")
+				)
+				.fetchOne();
+		
+		return content;
+	}
+	
 	private DateTemplate<String> regDate() {
+		DateTemplate<String> formattedDate = Expressions.dateTemplate(
+                String.class
+                , "DATE_FORMAT({0}, {1})"
+                , board.regDate
+                , ConstantImpl.create("%Y%m%d"));
+		return formattedDate;
+	}
+	
+	private DateTemplate<String> regDateTime() {
 		DateTemplate<String> formattedDate = Expressions.dateTemplate(
                 String.class
                 , "DATE_FORMAT({0}, {1})"
@@ -96,7 +147,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 		return formattedDate;
 	}
 	
-	private DateTemplate<String> updtDate() {
+	private DateTemplate<String> updtDateTime() {
 		DateTemplate<String> formattedDate = Expressions.dateTemplate(
                 String.class
                 , "DATE_FORMAT({0}, {1})"

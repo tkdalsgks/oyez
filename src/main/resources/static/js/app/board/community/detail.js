@@ -75,7 +75,7 @@ function goChangePage() {
 	if(writer != memberId) {
 		toastr.warning('권한이 없는 게시글입니다.');
 	} else {
-        location.href = '/' + id + '/modify' + location.search;
+        location.href = '/posts/' + id + '/modify' + location.search;
 	}
 	/* th:href="@{/community/write( id=${board.id} )}"  */
 }
@@ -108,9 +108,9 @@ function insertComment(boardId) {
 	
 	if(boardSeq == 2) {
 		var rating = document.getElementById('rating');
-		var params = { "boardId": boardId, "content": content, "writerId": userId, "memberNickname": user, "rating": rating.value };
+		var params = { "boardId": boardId, "content": content, "writerId": memberId, "memberNickname": user, "rating": rating.value };
 	} else {
-		var params = { "boardId": boardId, "content": content, "writerId": userId, "memberNickname": user };
+		var params = { "boardId": boardId, "content": content, "writerId": memberId, "memberNickname": user };
 	}
 	
 	if(content == "") {
@@ -342,15 +342,12 @@ function printCommentList() {
 							<div class="comment-img">
 								<img src="${comment.profileImg}" style="border-radius: 999px;">
 								<div class="comment-name">
-									<span class="name"><a href="/${comment.writerId}/activity">${comment.writer}</a></span>
+									<span class="name"><a href="/${comment.memberId}/activity">${comment.memberNickname}</a></span>
 									<div class="comment-edit" style="display: flex;">
-										<span class="time comment-time">${comment.regDate}
+										<span class="time comment-time">${timeForToday(comment.regDate)}
 											<span>${comment.updtDate != null ? '·' : ''}</span>
 											<span class="comment-udate">${comment.updtDate != null ? '수정됨' : ''}</span>
 										</span>
-										<!-- 
-										<span onclick="openModal(${comment.id}, '${comment.memberNickname}', '${comment.content}' )" class="material-symbols-outlined comment-edit" style="align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? 'edit' : ''}</span> 
-										-->
 									</div>
 								</div>
 								<div th:if="${boardSeq == '2'}" style="display: flex; flex-direction: column;">
@@ -360,8 +357,8 @@ function printCommentList() {
 											<span style="width: ${comment.rating}0%">★★★★★</span>
 										</span>
 									</div>
-									<div th:if="${userId} == ${comment.writerId}" style="text-align: center;">
-										${userId == comment.member.writerId ? 
+									<div th:if="${memberId} == ${comment.memberId}" style="text-align: center;">
+										${memberId == comment.memberId ? 
 											`<span onclick="replyUpdate(${comment.id})" id="replyUpdate${comment.id}" style="align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '수정' : ''}</span>
 											<span onclick="replyCancel(${comment.id})" id="replyCancel${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '취소' : ''}</span>
 											<span onclick="updateComment('${comment.id}', '${comment.memberNickname}')" id="replySave${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer; background-color: skyblue;">${comment.deleteYn != 'Y' ? '저장' : ''}</span>
@@ -389,20 +386,17 @@ function printCommentList() {
 							<div class="comment-img">
 								<img src="${comment.profileImg}" style="border-radius: 999px;">
 								<div class="comment-name">
-									<span class="name"><a href="/${comment.writerId}/activity">${comment.memberNickname}</a></span>
+									<span class="name"><a href="/${comment.memberId}/activity">${comment.memberNickname}</a></span>
 									<div class="comment-edit" style="display: flex;">
 										<span class="time comment-time">${timeForToday(comment.regDate)}
 											<span>${comment.updtDate != null ? '·' : ''}</span>
 											<span class="comment-udate">${comment.updtDate != null ? '수정됨' : ''}</span>
 										</span>
-										<!-- 
-										<span onclick="openModal(${comment.id}, '${comment.memberNickname}', '${comment.content}' )" class="material-symbols-outlined comment-edit" style="align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? 'edit' : ''}</span> 
-										-->
 									</div>
 								</div>
 								<div th:if="${boardSeq == '2'}" style="display: flex; flex-direction: column;">
-									<div th:if="${userId} == ${comment.writerId}" style="text-align: center;">
-										${userId == comment.writerId ? 
+									<div th:if="${memberId} == ${comment.writerId}" style="text-align: center;">
+										${memberId == comment.writerId ? 
 											`<span onclick="replyUpdate(${comment.id})" id="replyUpdate${comment.id}" style="align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '수정' : ''}</span>
 											<span onclick="replyCancel(${comment.id})" id="replyCancel${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '취소' : ''}</span>
 											<span onclick="updateComment('${comment.id}', '${comment.memberNickname}')" id="replySave${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer; background-color: skyblue;">${comment.deleteYn != 'Y' ? '저장' : ''}</span>

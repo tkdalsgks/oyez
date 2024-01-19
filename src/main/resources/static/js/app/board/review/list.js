@@ -93,87 +93,14 @@ function drawPlus() {
 function drawList(res) {
 
     let html = '';
-    /*
-    notice.forEach(row => {
-        html += `
-        	<tr>
-                <td class="list-important">
-	                	<div>
-	                		<div class="list-img">
-		                		<a href="/${row.writerId}/activity">
-			                		<span class="list-writer" style="font-weight: 800;">관리자</span>
-				                </a>
-		                		<span>&nbsp;·&nbsp;</span>
-			                	<span class="list-time">${timeForToday(moment(row.idate).format('YYYY/MM/DD HH:mm'))}</span>
-			                	<!-- <span>${row.udate != null ? '&nbsp;·&nbsp;' : ''}</span> -->
-			                	<!-- <span class="list-udate">${row.udate != null ? '수정됨' : ''}</span> -->
-		                	</div>
-		        			${row.privateYn == 'N' ? 
-		                		`<a href="javascript:void(0);" onclick="goViewPage(` + row.id + `);"><div class="list-title"><span>` + row.title + `</span></div></a>` : 
-		                		`<div class="list-title" style="cursor: pointer;" onclick="privatePageNotice(` + row.id + `)"><span><img style="margin-right: 5px;" src="/img/app/board/lock.png">` + row.title + `</span></div>` }
-		                	<div class="list-info">
-			                	<span class="list-filter1">${row.noticeYn === false ? '일상' : '공지사항'}</span>
-			                	<span class="list-hashtag">${row.hashtag}</span>
-			                	<div>
-			                		<svg class="list-view-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-				                	<span class="list-view">${row.viewCnt}</span>
-			                		<svg class="list-comment-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"></path></svg>
-				                	<span class="list-comment">${row.commentCnt}</span>
-			                		<svg class="list-likes-svg" style="color: red" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16"> <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" fill="red"></path> </svg>
-				                	<span class="list-likes">${row.likesCnt}</span>
-			                	</div>
-		                	</div>
-	                	</div>
-                </td>
-            </tr>
-        `;
-    })
     
-    likes.forEach(row => {
-        html += `
-        	<tr>
-                <td class="list-important">
-	                	<div>
-	                		<div class="list-img">
-		                		<a href="/${row.writerId}/activity">
-		                			${row.profileImg != null ? 
-		                				`<img src="${row.profileImg}">` :
-		                				`<span>${row.subWriter}<span>` }
-			                		<span class="list-writer">${row.writer}</span>
-				                </a>
-		                		<span>&nbsp;·&nbsp;</span>
-			                	<span class="list-time">${timeForToday(moment(row.idate).format('YYYY/MM/DD HH:mm'))}</span>
-			                	<span>${row.udate != null ? '&nbsp;·&nbsp;' : ''}</span>
-			                	<span class="list-udate">${row.udate != null ? '수정됨' : ''}</span>
-		                	</div>
-		                	${row.privateYn == 'N' ? 
-		                		`<a href="javascript:void(0);" onclick="goViewPage(` + row.id + `);"><div class="list-title"><span>` + row.title + `</span></div></a>` : 
-		                		`<div class="list-title" style="cursor: pointer;" onclick="privatePageLikes(` + row.id + `)"><span><img style="margin-right: 5px;" src="/img/app/board/lock.png">` + row.title + `</span></div>` }
-		                	<div class="list-info">
-			                	<span class="list-filter1">${row.likesCnt >= 1 ? '좋아요' : row.id}</span>
-			                	<span class="list-hashtag">${row.hashtag}</span>
-			                	<div>
-			                		<svg class="list-view-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-				                	<span class="list-view">${row.viewCnt}</span>
-			                		<svg class="list-comment-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"></path></svg>
-				                	<span class="list-comment">${row.commentCnt}</span>
-				                	<svg class="list-likes-svg" style="color: red" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16"> <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" fill="red"></path> </svg>
-				                	<span class="list-likes">${row.likesCnt}</span>
-			                	</div>
-		                	</div>
-	                	</div>
-                </td>
-            </tr>
-        `;
-    })
-    */
     res.review.content.forEach(row => {
 		html += `
 			<li class="postGrid__block">
 				${row.profileImg != null ? 
 					`<a href="javascript:goViewPage(` + row.id + `);">
 						<div>
-							<img src="/img/app/common/image.gif" class="pb__contentImg">
+							${row.titleImg != null ? `<img src="${row.titleImg}" class="pb__contentImg">` : `` }
 						</div>
 					</a>` : ``
 				}

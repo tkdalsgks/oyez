@@ -2,15 +2,18 @@ package kr.oyez.board.review.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-@Getter @Setter
+@Builder
+@Getter
+@NoArgsConstructor
 public class ReviewRequestDto {
 
-	private Long id;
+private Long id;
 	
-	private Long boardId;
+	private String boardSeq;
 	
 	private String title;
 	
@@ -18,34 +21,47 @@ public class ReviewRequestDto {
 	
 	private String writerId;
 	
-	private String writer;
-	
 	private String titleImg;
+	
+	private String filter;
+	
+	private String hashtag;
+	
+	private int rating;
+	
+	private int viewCnt;
+	
+	private int commentCnt;
+	
+	private int likesCnt;
 	
 	private String noticeYn;
 	
 	private String privateYn;
 	
-	private String filterCd;
+	private String useYn;
 	
-	private String filter;
+	private String regDate;
 	
-	private String hashtag;
-
 	@QueryProjection
-	public ReviewRequestDto(Long id, Long boardId, String title, String content, String writerId, String writer,
-			String titleImg, String noticeYn, String privateYn, String filterCd, String filter, String hashtag) {
+	public ReviewRequestDto(Long id, String boardSeq, String title, String content, String writerId, String titleImg,
+			String filter, String hashtag, int rating, int viewCnt, int commentCnt, int likesCnt, String noticeYn,
+			String privateYn, String useYn, String regDate) {
 		this.id = id;
-		this.boardId = boardId;
+		this.boardSeq = boardSeq;
 		this.title = title;
 		this.content = content;
 		this.writerId = writerId;
-		this.writer = writer;
 		this.titleImg = titleImg;
-		this.noticeYn = noticeYn;
-		this.privateYn = privateYn;
-		this.filterCd = filterCd;
 		this.filter = filter;
 		this.hashtag = hashtag;
+		this.rating = rating;
+		this.viewCnt = viewCnt;
+		this.commentCnt = commentCnt;
+		this.likesCnt = likesCnt;
+		this.noticeYn = noticeYn;
+		this.privateYn = privateYn;
+		this.useYn = useYn;
+		this.regDate = regDate;
 	}
 }

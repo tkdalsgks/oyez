@@ -9,5 +9,4 @@ import kr.oyez.comment.repository.custom.CommentRepositoryCustom;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositoryCustom {
 
-	
 }

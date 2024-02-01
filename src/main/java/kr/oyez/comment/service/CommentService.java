@@ -1,9 +1,12 @@
 package kr.oyez.comment.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import kr.oyez.comment.domain.Comment;
+import kr.oyez.comment.dto.CommentRequestDto;
 import kr.oyez.comment.dto.CommentResponseDto;
 import kr.oyez.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +25,38 @@ public class CommentService {
 		return commentRepository.countComment(boardId);
 	}
 	
-	/*
-	public CommentResponseDto findByCommentId(final Long id) {
-		return commentMapper.findByCommentId(id);
-	}
-	
-	@Transactional
 	public boolean saveComment(CommentRequestDto params) {
+		
 		int queryResult = 0;
 
 		if (params.getId() == null) {
-			queryResult = commentMapper.saveComment(params);
+			commentRepository.saveComment(params);
+			queryResult = 1;
 		}
-
+		
 		return (queryResult == 1) ? true : false;
+	}
+
+	public boolean updateComment(CommentRequestDto params) {
+		
+		int queryResult = 0;
+
+		if (params.getId() != null) {
+			commentRepository.updateComment(params);
+			queryResult = 1;
+		}
+		
+		return (queryResult == 1) ? true : false;
+	}
+
+	public Optional<Comment> findById(Long id) {
+		
+		return commentRepository.findById(id);
+	}
+	
+	/*
+	public CommentResponseDto findByCommentId(final Long id) {
+		return commentMapper.findByCommentId(id);
 	}
 	
 	@Transactional

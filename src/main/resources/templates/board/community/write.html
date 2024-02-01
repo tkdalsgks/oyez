@@ -35,6 +35,7 @@
 				<form id="saveForm" method="post" autocomplete="off">
 					<!-- 서버로 전달할 공지글 여부 -->
 					<input type="hidden" id="noticeYn" name="noticeYn" />
+					<input type="hidden" id="privateYn" name="privateYn" />
 					<input type="hidden" id="filterId" name="filterId" />
 					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${memberName}" />
 					<input type="hidden" id="IDate" name="IDate" class="write-date" />
@@ -48,6 +49,12 @@
 								<span class="chkbox" style="display: none;"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"></label></span>
 							</div>
 						</div>
+						<div class="write-private">
+							<div>
+								<span>비공개</span>
+								<span class="chkbox"><input type="checkbox" id="isPrivate" name="isPrivate" class="chk" /><i></i><label for="isPrivate"></label></span>
+							</div>
+						</div>
 						<div style="display: flex;">
 							<span class="write-filter">필터</span>
 							<select style="width: 100px; height: 22px; margin-left: .85rem; margin-bottom: 0; padding-left: 0; border: none;" id="filter">
@@ -57,7 +64,7 @@
 						<div>
 							<span class="write-title">제목</span>
 							<div class="write-title-input">
-								<input id="title" name="title" maxlength="20" />
+								<input id="title" name="title" maxlength="30" />
 							</div>
 						</div>
 						<div>
@@ -109,9 +116,6 @@
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
 		<script type="text/javascript" src="/js/app/board/community/write.js"></script>
 		<script type="text/javascript" src="/js/app/board/uploadAdapter.js"></script>
-		<!-- LOADING -->
-		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
-		<script type="text/javascript" src="/js/app/loading.js"></script>
 	</th:block>
 	
 </body>

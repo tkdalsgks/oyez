@@ -14,8 +14,6 @@
 	<!-- BOARD -->
 	<link rel="stylesheet" th:href="@{/css/app/board/board.css}" />
 	<link rel="stylesheet" th:href="@{/css/app/button.css}" />
-	
-	<link rel="stylesheet" th:href="@{/css/app/loading.css}" />
 </th:block>
 
 </head>
@@ -30,7 +28,7 @@
 				<div class="list__headerBox">
 					<div class="list__searchBox">
 						<div class="list__search">
-							<a th:href="@{/trend/week}">
+							<a th:href="@{/trend/week}" style="border-bottom: 2px solid black; padding-bottom: 5px; border-color: var(--text1);">
 								<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1.85rem" width="1.85rem" xmlns="http://www.w3.org/2000/svg">
 									<path fill="none" d="M0 0h24v24H0z"></path><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"></path>
 								</svg>
@@ -92,9 +90,6 @@
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
 		<script type="text/javascript" src="/js/app/board/community/list.js"></script>
 		<script type="text/javascript" src="/js/app/board/community/list_trend.js"></script>
-		<!-- LOADING -->
-		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
-		<script type="text/javascript" src="/js/app/loading.js"></script>
 	</th:block>
 	
 </body>

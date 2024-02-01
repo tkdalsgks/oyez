@@ -1,6 +1,5 @@
 package kr.oyez.board.community.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,35 +14,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Board {
+public class Hashtag {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String boardSeq;
+	private Long boardId;
 	
-	private String title;
-	
-	private String content;
-	
-	@Column(name = "memberId")
-	private String writerId;
-	
-	private String titleImg;
-	
-	private String filter;
-	
-	private int rating;
-	
-	private int viewCnt;
-	
-	private int commentCnt;
-	
-	private int likesCnt;
-	
-	private String noticeYn;
-	
-	private String privateYn;
+	private String hashtag;
 	
 	private String useYn;
 	

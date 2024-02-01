@@ -4,10 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import kr.oyez.board.community.domain.Board;
+import kr.oyez.board.community.dto.CommunityRequestDto;
 import kr.oyez.board.review.repository.custom.ReviewRepositoryCustom;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Board, Long>, ReviewRepositoryCustom {
+
+	Object save(CommunityRequestDto params);
 
 	//public List<ReviewBoardResponseDto> findAll(SearchDto params);
 	//public List<ReviewBoardResponseDto> findNotice(SearchDto params);

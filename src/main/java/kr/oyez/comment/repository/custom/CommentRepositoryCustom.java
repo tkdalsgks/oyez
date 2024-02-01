@@ -2,6 +2,7 @@ package kr.oyez.comment.repository.custom;
 
 import java.util.List;
 
+import kr.oyez.comment.dto.CommentRequestDto;
 import kr.oyez.comment.dto.CommentResponseDto;
 
 public interface CommentRepositoryCustom {
@@ -10,6 +11,9 @@ public interface CommentRepositoryCustom {
 	
 	public Long countComment(Long boardId);
 	
+	public void saveComment(CommentRequestDto saveComment);
+	
+	public void updateComment(CommentRequestDto params);
 	
 	//public CommentResponseDTO findByCommentId(Long id);
 	//public int saveComment(CommentRequestDTO params);

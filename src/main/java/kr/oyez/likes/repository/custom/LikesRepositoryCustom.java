@@ -8,7 +8,9 @@ public interface LikesRepositoryCustom {
 	
 	Long countBoardLikes(Likes likes);
 	
+	void saveLikes(Likes insertLikes);
+	
 	Long deleteLikes(Likes likes);
 	
-	Long updateCountLikes(Likes likes);
+	void updateCountLikes(Likes likes);
 }

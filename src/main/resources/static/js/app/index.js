@@ -74,3 +74,25 @@ var index = {
 $(function() {
    index.init();
 });
+
+$('#explore-login').on('click', function() {
+	$.ajax({
+		url: '/login',
+		type: 'post',
+		data: {
+			memberId: 'test',
+       		memberPwd: 'test'
+       	},
+       	success: function() {
+			window.location = "/";
+		},
+		error: function() {
+			toastr.options = {
+				progressBar: true,
+			 	showMethod: 'slideDown',
+			 	timeOut: 1500
+			};
+			toastr.error('서버와의 통신 에러입니다.', '잠시 후 재시도 바랍니다.');
+       }
+    });
+});

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
-import kr.oyez.board.community.dto.CommunityResponseDto;
 import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.board.review.service.ReviewService;
 import kr.oyez.common.domain.Common;
@@ -41,7 +40,7 @@ public class ReviewController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [MAIN]");
+			log.info("@@@ [POST] Review Post List - Trend");
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -84,7 +83,7 @@ public class ReviewController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Search List");
+			log.info("@@@ [POST] Review New Post boardId {}" + id);
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());

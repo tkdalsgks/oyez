@@ -44,6 +44,11 @@ public class FileService {
 		PrintWriter printWriter = null;
 		OutputStream out = null;
 		MultipartFile file = upload.getFile("upload");
+		
+		//System.out.println("@@@@@@@@@@@@@ " + file);
+		//System.out.println("@@@@@@@@@@@@@ " + file.getName());
+		
+		
 		if(file != null) {
 			if(file.getSize() > 0 && StringUtils.isNotBlank(file.getName())) {
 				if(file.getContentType().toLowerCase().startsWith("image/")) {
@@ -68,6 +73,8 @@ public class FileService {
 						printWriter = response.getWriter();
 						response.setContentType("text/html");
 						String fileUrl = "https://oyez-webservice.s3.ap-northeast-2.amazonaws.com/images/" + getMemberId() + "/" + fileName;
+						
+						System.out.println(fileUrl);
 						
 						jsonObj.addProperty("uploaded", 1);
 						jsonObj.addProperty("fileName", fileName);

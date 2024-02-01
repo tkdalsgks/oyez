@@ -15,16 +15,27 @@ function certifiedEmail(memberId) {
 		"memberEmail": memberEmail.value
 	};
 	
+	if(role == 'EXPLORE') {
+		toastr.options = {
+			progressBar: true,
+		 	showMethod: 'slideDown',
+		 	timeOut: 2000
+		};
+		toastr.error('해당 계정은 사용할 수 없는 기능입니다.', '');
+		
+		return false;
+	}
+	
 	$.ajax({
-		url: "/api/v1" + certifiedEmail_uri,
+		url: certifiedEmail_uri,
 		type: "POST",
 		contentType: "application/json",
 		dataType: "json",
 		data: JSON.stringify(params),
-		success: function(response) {
+		success: function() {
 			toastr.success('이메일로 인증링크를 보냈습니다.');
 		},
-		error: function(response) {
+		error: function() {
 			toastr.options = {
 				progressBar: true,
 			 	showMethod: 'slideDown',

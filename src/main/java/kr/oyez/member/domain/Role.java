@@ -13,6 +13,8 @@ public enum Role {
 	
 	MEMBER("ROLE_MEMBER", "인증 회원"),
 	
+	EXPLORE("ROLE_EXPLORE", "둘러보기 회원"),
+	
 	UN_MEMBER("ROLE_UN_MEMBER", "탈퇴 및 추방 회원"),
 	
 	GUEST("ROLE_GUEST", "미인증 회원");

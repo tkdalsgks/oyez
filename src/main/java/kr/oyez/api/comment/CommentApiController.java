@@ -2,10 +2,16 @@ package kr.oyez.api.comment;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +23,12 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import jakarta.servlet.http.HttpSession;
 import kr.oyez.board.adapter.GsonLocalDateTimeAdapter;
+import kr.oyez.comment.domain.Comment;
+import kr.oyez.comment.dto.CommentRequestDto;
 import kr.oyez.comment.dto.CommentResponseDto;
 import kr.oyez.comment.service.CommentService;
+import kr.oyez.common.utils.StringUtils;
+import kr.oyez.member.dto.SessionMember;
 import kr.oyez.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +47,9 @@ public class CommentApiController {
 	/**
 	 * 댓글 리스트 조회
 	 */
+	@Transactional
 	@GetMapping("/comments/{boardId}")
-	public JsonObject getCommentList(@PathVariable("boardId") Long boardId, Model model) {
+	public JsonObject list_comment(@PathVariable("boardId") Long boardId, Model model) {
 		log.info("@@@ [COMMENT] Search List board_id {}", boardId);
 		
 		JsonObject jsonObj = new JsonObject();
@@ -55,16 +66,19 @@ public class CommentApiController {
 	
 	/**
 	 * 댓글 작성
-	 
-	@PostMapping({"/comments", "/comments/{id}"})
-	public JsonObject saveComment(@PathVariable(value = "id", required = false) Long id, @RequestBody final CommentRequestDTO params) {
-		log.info("##### Comment Page Save __ API " + id + " #####");
+	 */
+	@Transactional
+	@PostMapping("/comments")
+	public JsonObject save(@RequestBody CommentRequestDto params) {
+		log.info("@@@ [COMMENT] save");
+		
+		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		
 		JsonObject jsonObj = new JsonObject();
 		
 		try {
-			boolean save = commentService.saveComment(params);
-			commentService.updateCountComment(params);
+			boolean save = saveComment(params, sessionMember);
+			//commentService.updateCountComment(params);
 			jsonObj.addProperty("result", save);
 		} catch(DataAccessException e) {
 			jsonObj.addProperty("message", "데이터베이스 처리 과정에 문제가 발생하였습니다.");
@@ -74,24 +88,49 @@ public class CommentApiController {
 		
 		return jsonObj;
 	}
+
+	private boolean saveComment(CommentRequestDto params, SessionMember sessionMember) {
+		CommentRequestDto saveComment = CommentRequestDto.builder()
+				.boardId(params.getBoardId())
+				.content(params.getContent().replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+				.memberId(sessionMember.getMemberId())
+				.rating(params.getRating())
+				.deleteYn("N")
+				.adminDeleteYn("N")
+				.regDate(StringUtils.dateTime())
+				.build();
+		
+		boolean save = commentService.saveComment(saveComment);
+		
+		return save;
+	}
 	
 	/**
 	 * 댓글 수정
-	 
+	 */
 	@Transactional
-	@PatchMapping({"/comments", "/comments/{id}"})
-	public JsonObject updateComment(@PathVariable(value = "id", required = false) Long id, @RequestBody final CommentRequestDTO params) {
-		log.info("##### Comment Page Modify __ API " + id + " #####");
+	@PatchMapping("/comments/{id}")
+	public JsonObject update_comment(@PathVariable(value = "id") Long id, @RequestBody CommentRequestDto params) {
+		log.info("@@@ [COMMENT] modify {}", id);
 		
 		JsonObject jsonObj = new JsonObject();
 		
 		try {
-			SessionUser sessionUser = (SessionUser) session.getAttribute("user");
-			UserDTO user = userService.findByUserId(sessionUser.getUserEmail());
-			CommentResponseDTO comment = commentService.findByCommentId(id);
+			SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
+			Optional<Comment> comment = commentService.findById(id);
 			
-			if(user.getUserId().equals(comment.getWriterId())) {
-				boolean update = commentService.updateComment(params);
+			System.out.println("@@@@@@@@@@@@@@@ " + sessionMember.getMemberId());
+			System.out.println("@@@@@@@@@@@@@@@ " + comment.get().getMemberId());
+			
+			if(sessionMember.getMemberId().equals(comment.get().getMemberId())) {
+				CommentRequestDto updateComment = CommentRequestDto.builder()
+						.id(id)
+						.content(params.getContent().replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+						.rating(params.getRating())
+						.updtDate(StringUtils.dateTime())
+						.build();
+			
+				boolean update = commentService.updateComment(updateComment);
 				jsonObj.addProperty("result", update);
 				jsonObj.addProperty("message", "댓글이 수정되었습니다.");
 			} else {
@@ -112,7 +151,7 @@ public class CommentApiController {
 	 
 	@Transactional
 	@DeleteMapping("/comments/{id}")
-	public JsonObject deleteComment(@PathVariable("id") final Long id) {
+	public JsonObject delete_comment(@PathVariable("id") final Long id) {
 		log.info("##### Comment Page Delete __ API " + id + " #####");
 		
 		JsonObject jsonObj = new JsonObject();

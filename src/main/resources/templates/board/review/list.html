@@ -14,8 +14,6 @@
 	<!-- BOARD -->
 	<link rel="stylesheet" th:href="@{/css/app/board/board.css}" />
 	<link rel="stylesheet" th:href="@{/css/app/button.css}" />
-	
-	<link rel="stylesheet" th:href="@{/css/app/loading.css}" />
 </th:block>
 
 </head>
@@ -30,6 +28,12 @@
 				<div class="list__headerBox">
 					<div class="list__searchBox">
 						<div class="list__search">
+							<a th:href="@{/review}" style="border-bottom: 2px solid black; padding-bottom: 5px; border-color: var(--text1);">
+								<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1.5rem" width="1.5rem" xmlns="http://www.w3.org/2000/svg">
+									<path fill="none" d="M0 0h24v24H0z"></path><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+								</svg>
+								<span>리뷰</span>
+							</a>
 							<div onclick="searchBox();">
 								<svg stroke="currentColor" fill="currentColor" troke-width="0" viewBox="0 0 50 50" width="1.35rem" height="1.35rem" xmlns="http://www.w3.org/2000/svg">
 									<path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
@@ -79,9 +83,6 @@
 		<script type="text/javascript" src="/js/lib/moment.js"></script>
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
 		<script type="text/javascript" src="/js/app/board/review/list.js"></script>
-		<!-- LOADING -->
-		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
-		<script type="text/javascript" src="/js/app/loading.js"></script>
 	</th:block>
 	
 </body>

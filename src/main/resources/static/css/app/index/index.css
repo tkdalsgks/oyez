@@ -32,7 +32,7 @@ input:focus { outline: 2.5px solid #00F5FF !important; -webkit-transition: borde
 .index-brand a { font-family: var(--bs-brand-logo); color: var(--text1); letter-spacing: -1px; margin-left: 2rem; margin-right: 2rem; font-size: 30px; }
 
 /* MAIN */
-.main { height: 100%; text-align: center; margin-bottom: 5rem; }
+.main { height: 100%; text-align: center; }
 
 .form-main { position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); 
 	transform: translate(-50%, -50%); width: 700px; text-align: center; }
@@ -83,11 +83,9 @@ input:focus { outline: 2.5px solid #00F5FF !important; -webkit-transition: borde
 .navbar-brand-logo { font-family: var(--bs-brand-logo); color: var(--text1); letter-spacing: -1px; margin-left: 2rem; margin-right: 2rem; font-size: 30px; }
 .nav-link { text-align: right; }
 
-.menu-trigger { margin-right: 2rem; cursor: pointer; align-items: center; }
-.menu-trigger div { background-color: var(--text1); width: 20px; height: 5px; margin: 3px; }
-.toggle .line1 { transform: rotate(-45deg) translate(-8px, 6px); }
-.toggle .line2 { opacity: 0; }
-.toggle .line3 { transform: rotate(45deg) translate(-8px, -6px); }
+.menu-trigger { margin-left: 1.75rem; margin-right: 1.75rem; cursor: pointer; align-items: center; }
+.menu-trigger2 { margin-left: 1.75rem; cursor: pointer; align-items: center; }
+.menu-trigger div { background: var(--text1); width: 20px; height: 4px; margin: 3px; }
 
 /* FOOTER */
 .footer { width: 100%; position: fixed; left: 0; right: 0; bottom: 0; text-align: center; padding-top: 1.75rem; padding-bottom: 1.25rem; color: var(--text1); }

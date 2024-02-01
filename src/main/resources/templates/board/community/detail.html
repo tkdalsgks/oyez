@@ -52,17 +52,18 @@
 							</span>
 						</div>
 						<div style="display: flex; justify-content: space-between; align-items: center;">
-							<span class="board-viewCnt1">
-								<span class="board-view">
+							<span class="board-time" th:text="${#temporals.format(#temporals.createDate(board.regDate, 'yyyyMMddHHmmss'), 'yyyy년 M월 d일')}"></span>	
+							<div style="display: flex; align-items: center;">
+								<div class="board-view">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-4 w-4 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-								</span>
-								[[ ${board.viewCnt} ]]
-							</span>
-							<span style="letter-spacing: -1px;" th:text="${#temporals.format(#temporals.createDate(board.regDate, 'yyyyMMddHHmmss'), 'yyyy년 M월 d일')}"></span>
-							<button id="board-likes" class="btns btn_mid board-likes">
-				            	<img th:src="${likes != 0 ? '/img/app/board/likes.png' : '/img/app/board/unlikes.png'}" th:onclick="insertLikes([[ ${board.id} ]]);" class="board-likes">
-				            	<span>[[ ${likesAll} ]]</span>
-				            </button>
+									[[ ${board.viewCnt} ]]
+								</div>
+								
+								<div id="board-likes" class="board-likes" th:onclick="insertLikes([[ ${board.id} ]]);">
+									<svg viewBox="0 0 24 24"><path fill="currentColor" d="m18 1-6 4-6-4-6 5v7l12 10 12-10V6z"></path></svg>
+					            	[[ ${board.likesCnt} ]]
+								</div>
+				            </div>
 						</div>
 					</div>
 				</div>
@@ -83,7 +84,7 @@
 				<form class="form-horizontal form-view" onsubmit="return false;">
 					<div class="comment-write">
 						<div th:if="${certified != null}" class="comment-input-group">
-							<textarea id="content" class="form-control comment-input" placeholder="댓글은 누구나 편안하게 남겨주세요."></textarea>
+							<textarea id="content" class="form-control comment-input textarea" placeholder="댓글을 작성해주세요."></textarea>
 							<div th:if="${board.boardSeq == '2' && certified != null}" style="margin-top: 1rem; align-items: baseline;">
 								<span class="star-name">
 									<span id="star" class="star">
@@ -122,7 +123,7 @@
 			var role = [[ ${role} ]];
 			var id = [[ ${board.id} ]];
 			var memberId = [[ ${memberId} ]];
-			var comment_uri = [[ @{/comments} ]];
+			var comment_uri = [[ @{/api/v1/comments} ]];
 			var boardId = [[ ${board.id} ]];
 			var printCommentList_uri = [[ @{/api/v1/comments/} ]] + [[ ${board.id} ]];
 			var insertLikes_uri = [[ @{/api/v1/community/likes} ]];
@@ -137,9 +138,6 @@
 		<script type="text/javascript" src="/js/lib/moment.js"></script>
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
 		<script type="text/javascript" src="/js/app/board/community/detail.js"></script>
-		<!-- LOADING -->
-		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
-		<script type="text/javascript" src="/js/app/loading.js"></script>
 	</th:block>
 
 

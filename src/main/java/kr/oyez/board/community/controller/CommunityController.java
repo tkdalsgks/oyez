@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import kr.oyez.board.community.dto.CommunityResponseDto;
+import kr.oyez.board.community.dto.NoticeResponseDto;
 import kr.oyez.board.community.service.CommunityService;
 import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.board.review.service.ReviewService;
@@ -51,7 +52,7 @@ public class CommunityController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Search List");
+			log.info("@@@ [POST] Community Post List - Trend");
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -74,6 +75,9 @@ public class CommunityController {
 				model.addAttribute("profileImg", sessionMember.getProfileImg());
 			}
 			
+			List<NoticeResponseDto> notice = communityService.findByNotice();
+			model.addAttribute("notice", notice);
+			
 			// 커뮤니티 게시글 갯수 - 트렌드
 			Long board = communityService.countBoardTrend();
 			model.addAttribute("commuCnt", board);
@@ -92,7 +96,7 @@ public class CommunityController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Search List");
+			log.info("@@@ [POST] Community Post List - Recent");
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -165,7 +169,7 @@ public class CommunityController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Detail board_id {}", id);
+			log.info("@@@ [POST] Post Detail boardId {}" + id);
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -274,7 +278,7 @@ public class CommunityController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Search List");
+			log.info("@@@ [POST] Community New Post boardId {}" + id);
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());
@@ -321,7 +325,7 @@ public class CommunityController {
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		if (sessionMember != null) {
-			log.info("@@@ [COMMUNITY] Search List");
+			log.info("@@@ [POST] Community Modify Post boardId {}" + id);
 			
 			model.addAttribute("memberId", sessionMember.getMemberId());
 			model.addAttribute("memberName", sessionMember.getMemberNickname());

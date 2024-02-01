@@ -4,6 +4,7 @@ window.onload = () => {
 	setQueryStringParams();
 	
 	getList(size);
+	getNotice();
 }
 
 function enterkey() {
@@ -84,76 +85,24 @@ function goViewPage(id) {
     location.href = '/posts/' + id;
 }
 
-// 비공개 게시글 접근 : 리스트
-function privatePageList(id) {
-	list.forEach(function(value) {
-		if(value.id == id) {
-			if(memberId == value.memberId) {
-				toastr.options = {
-					progressBar: true,
-				 	showMethod: 'slideDown',
-				 	timeOut: 1500
-				};
-				toastr.options.onHidden = function() { goViewPage(id); };
-				toastr.warning('본인이 등록한 게시글로 상세페이지로 이동합니다.', '비공개 게시글입니다.');
-			} else {
-				toastr.options = {
-					progressBar: true,
-				 	showMethod: 'slideDown',
-				 	timeOut: 1500
-				};
-				toastr.error('다른 사용자가 등록한 게시물은 접근이 불가합니다.', '비공개 게시글입니다.');
-			}
-		} 
-	});
+// 비공개 게시글 접근
+function unlockBoard(id) {
+	toastr.options = {
+		progressBar: true,
+	 	showMethod: 'slideDown',
+	 	timeOut: 1500
+	};
+	toastr.options.onHidden = function() { goViewPage(id); };
+	toastr.warning('본인이 등록한 게시글로 상세페이지로 이동합니다.', '비공개 처리된 게시글입니다.');
 }
 
-// 비공개 게시글 접근 : 좋아요
-function privatePageLikes(id) {
-	likes.forEach(function(value) {
-		if(value.id == id) {
-			if(memberId == value.memberId) {
-				toastr.options = {
-					progressBar: true,
-				 	showMethod: 'slideDown',
-				 	timeOut: 1500
-				};
-				toastr.options.onHidden = function() { goViewPage(id); };
-				toastr.warning('본인이 등록한 게시글로 상세페이지로 이동합니다.', '비공개 게시글입니다.');
-			} else {
-				toastr.options = {
-					progressBar: true,
-				 	showMethod: 'slideDown',
-				 	timeOut: 1500
-				};
-				toastr.error('다른 사용자가 등록한 게시물은 접근이 불가합니다.', '비공개 게시글입니다.');
-			}
-		} 
-	});
-}
-
-// 비공개 게시글 접근 : 공지
-function privatePageNotice(id) {
-	notice.forEach(function(value) {
-		if(value.id == id) {
-			if(memberId == value.memberId) {
-				toastr.options = {
-					progressBar: true,
-				 	showMethod: 'slideDown',
-				 	timeOut: 1500
-				};
-				toastr.options.onHidden = function() { goViewPage(id); };
-				toastr.warning('본인이 등록한 게시글로 상세페이지로 이동합니다.', '비공개 게시글입니다.');
-			} else {
-				toastr.options = {
-					progressBar: true,
-				 	showMethod: 'slideDown',
-				 	timeOut: 1500
-				};
-				toastr.error('다른 사용자가 등록한 게시물은 접근이 불가합니다.', '비공개 게시글입니다.');
-			}
-		} 
-	});
+function lockedBoard() {
+	toastr.options = {
+		progressBar: true,
+	 	showMethod: 'slideDown',
+	 	timeOut: 2000
+	};
+	toastr.error('다른 사용자가 등록한 게시물은 접근이 불가합니다.', '비공개 처리된 게시글입니다.');
 }
 
 // 사용자 상세 페이지로 이동

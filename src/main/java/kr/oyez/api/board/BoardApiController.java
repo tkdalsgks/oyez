@@ -1,7 +1,9 @@
 package kr.oyez.api.board;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -20,7 +22,9 @@ import jakarta.transaction.Transactional;
 import kr.oyez.board.community.domain.Board;
 import kr.oyez.board.community.dto.CommunityRequestDto;
 import kr.oyez.board.community.dto.CommunityResponseDto;
+import kr.oyez.board.community.dto.NoticeResponseDto;
 import kr.oyez.board.community.service.CommunityService;
+import kr.oyez.board.review.dto.ReviewRequestDto;
 import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.board.review.service.ReviewService;
 import kr.oyez.common.dto.MessageDto;
@@ -39,6 +43,17 @@ public class BoardApiController {
 	private final ReviewService reviewService;
 	
 	private final HttpSession session;
+	
+	@GetMapping("/notice")
+	public Map<String, Object> notice(Model model) {
+		
+		List<NoticeResponseDto> notice = communityService.findByNotice();
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("notice", notice);
+		
+		return data;
+	}
 	
 	@Transactional
 	@GetMapping("/community/trend")
@@ -81,13 +96,13 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/community/save")
-	public String community_save(@RequestBody Board params, Model model) {
-		log.info("##### Board Page Save __ API #####");
+	public String community_save(@RequestBody CommunityRequestDto params, Model model) {
+		log.info("@@@ [POST] Community New Post");
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		
 		saveCommu(params, sessionMember);
-		//communityService.saveHashtag(params);
+		saveCommuHashtag(params);
 		
 		MessageDto message = new MessageDto("게시글 생성이 완료되었습니다.", "/community/recent", RequestMethod.GET, null);
 		
@@ -99,13 +114,13 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/review/save")
-	public String review_save(@RequestBody Board params, Model model) {
-		log.info("##### Board Page Save __ API #####");
+	public String review_save(@RequestBody ReviewRequestDto params, Model model) {
+		log.info("@@@ [POST] Review New Post boardId");
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		
 		saveReview(params, sessionMember);
-		//communityService.saveHashtag(params);
+		saveReviewHashtag(params);
 		
 		MessageDto message = new MessageDto("게시글 생성이 완료되었습니다.", "/review/recent", RequestMethod.GET, null);
 		
@@ -118,14 +133,10 @@ public class BoardApiController {
 	@Transactional
 	@PostMapping("/{boardId}/modify")
 	public String update(@PathVariable(value = "boardId") Long id, final CommunityRequestDto params, Model model) {
-		log.info("@@@ [FREE BOARD] Modify board_id {}", id);
+		log.info("@@@ [POST] Post Modify board_id {}", id);
 		
-		CommunityRequestDto updateBoard = CommunityRequestDto.builder()
-				.title(params.getTitle())
-				.content(params.getContent())
-				.build();
+		updateBoard(params);
 		
-		communityService.updateBoard(updateBoard);
 		MessageDto message = new MessageDto("게시글 수정이 완료되었습니다.", "javascript:history.go(-2)", RequestMethod.POST, null);
 		
 		return StringUtils.showMessageAndRedirect(message, model);
@@ -133,58 +144,65 @@ public class BoardApiController {
 	
 	/**
 	 * 전체 - 게시글 삭제
-	 
+	 */
+	@Transactional
 	@PostMapping("/{boardId}/delete")
-	public String delete(@PathVariable(value = "boardId") Long id, final SearchDto queryParams, Model model) {
-		log.info("@@@ [FREE BOARD] Delete board_id {}", id);
+	public String delete(@PathVariable(value = "boardId") Long id, final CommunityRequestDto params, Model model) {
+		log.info("@@@ [POST] Delete Post boardId {}" + id);
 		
-		freeBoardService.deleteBoard(id);
-		MessageDto message = new MessageDto("게시글 삭제가 완료되었습니다.", "/free", RequestMethod.GET, StringUtils.queryParamsToMap(queryParams));
+		CommunityRequestDto deleteBoard = CommunityRequestDto.builder()
+				.id(id)
+				.useYn("N")
+				.build();
+				
+		communityService.deleteBoard(deleteBoard);
+		
+		MessageDto message = new MessageDto("게시글 삭제가 완료되었습니다.", "javascript:history.go(-1)", RequestMethod.GET, null);
 		
 		return StringUtils.showMessageAndRedirect(message, model);
 	}
 	
 	/**
 	 * 전체 - 게시글 공개/비공개
-	 
+	 */
+	@Transactional
 	@PostMapping("/{boardId}/private")
-	public String publicOrPrivate(@PathVariable(value = "boardId") Long id, final SearchDto queryParams, Model model) {
-		log.info("@@@ [FREE BOARD] Public OR Private board_id {}", id);
+	public String publicOrPrivate(@PathVariable(value = "boardId") Long id, Model model) {
+		log.info("@@@ [POST] Public Or Private Post boardId {}" + id);
 		
-		FreeBoardResponseDto params = freeBoardService.findByBoardId(id);
-		String privateYn = params.getPrivateYn();
+		Optional<Board> params = communityService.findById(id);
+		String privateYn = params.get().getPrivateYn();
 		
 		if("Y".equals(privateYn)) {
-			freeBoardService.publicBoard(id);
+			communityService.publicBoard(id);
 		} else if("N".equals(privateYn)) {
-			freeBoardService.privateBoard(id);
+			communityService.privateBoard(id);
 		}	
 		
-		MessageDto message = new MessageDto("게시글 전환이 완료되었습니다.", "/free", RequestMethod.POST, StringUtils.queryParamsToMap(queryParams));
+		MessageDto message = new MessageDto("게시글 전환이 완료되었습니다.", "/free", RequestMethod.POST, null);
 		
 		return StringUtils.showMessageAndRedirect(message, model);
 	}
-	*/
 	
-	private void saveCommu(Board params, SessionMember sessionMember) {
-		Board saveCommu = Board.builder()
+	private void saveCommu(CommunityRequestDto params, SessionMember sessionMember) {
+		CommunityRequestDto saveCommu = CommunityRequestDto.builder()
 				.boardSeq("1")
 				.title(params.getTitle())
 				.content(params.getContent())
 				.writerId(sessionMember.getMemberId())
 				.titleImg(params.getTitleImg())
 				.noticeYn(params.getNoticeYn())
-				.privateYn("N")
+				.privateYn(params.getPrivateYn())
 				.filter(params.getFilter())
 				.useYn("Y")
 				.regDate(StringUtils.dateTime())
 				.build();
 		
-		communityService.save(saveCommu);
+		communityService.saveCommunity(saveCommu);
 	}
 
-	private void saveReview(Board params, SessionMember sessionMember) {
-		Board saveReview = Board.builder()
+	private void saveReview(ReviewRequestDto params, SessionMember sessionMember) {
+		ReviewRequestDto saveReview = ReviewRequestDto.builder()
 				.boardSeq("2")
 				.title(params.getTitle())
 				.content(params.getContent())
@@ -197,6 +215,37 @@ public class BoardApiController {
 				.regDate(StringUtils.dateTime())
 				.build();
 		
-		reviewService.save(saveReview);
+		reviewService.saveReview(saveReview);
+	}
+	
+	private void saveCommuHashtag(CommunityRequestDto params) {
+		CommunityRequestDto saveHashtag = CommunityRequestDto.builder()
+				.id(params.getId())
+				.hashtag(params.getHashtag())
+				.useYn("Y")
+				.regDate(StringUtils.dateTime())
+				.build();
+		
+		communityService.saveHashtag(saveHashtag);
+	}
+	
+	private void saveReviewHashtag(ReviewRequestDto params) {
+		CommunityRequestDto saveHashtag = CommunityRequestDto.builder()
+				.id(params.getId())
+				.hashtag(params.getHashtag())
+				.useYn("Y")
+				.regDate(StringUtils.dateTime())
+				.build();
+		
+		communityService.saveHashtag(saveHashtag);
+	}
+	
+	private void updateBoard(final CommunityRequestDto params) {
+		CommunityRequestDto updateBoard = CommunityRequestDto.builder()
+				.title(params.getTitle())
+				.content(params.getContent())
+				.build();
+		
+		communityService.updateBoard(updateBoard);
 	}
 }

@@ -27,13 +27,17 @@
 
 </head>
 
-<body data-theme="light">
+<body data-theme="">
 	
 	<!-- HEADER -->
 	<th:block th:replace="~{fragments/header :: header}"></th:block>
 	
+	<th:block th:replace="~{fragments/notice :: notice}"></th:block>
+	
 	<!-- CONTENT -->
 	<th:block layout:fragment="content"></th:block>
+	
+	<th:block th:replace="~{fragments/ads :: ads}"></th:block>
 	
 	<!-- FOOTER -->
 	<th:block th:replace="~{fragments/footer :: footer}"></th:block>
@@ -54,6 +58,7 @@
 	<script type="text/javascript" src="/js/lib/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/lib/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/js/app/header.js"></script>
+	<script type="text/javascript" src="/js/app/dark.js"></script>
 	<!-- SWEETALERT2 -->
 	<script type="text/javascript" src="/js/lib/sweetalert2.js"></script>
 	<!-- TOASTR  -->
@@ -62,8 +67,12 @@
 	<script type="text/javascript" src="/js/lib/sockjs.min.js"></script>
 	<script type="text/javascript" src="/js/lib/stomp.min.js"></script>
 	<script type="text/javascript" src="/js/app/popup.js"></script>
+	<!-- DEFAULT -->
+	<script type="text/javascript" src="/js/app/default.js"></script>
 	<!-- PREFIX -->
 	<script type="text/javascript" src="/js/lib/prefixfree.min.js"></script>
+	
+	<script type="text/javascript" src="/js/app/board/notice.js"></script>
 	
 	<!-- SCRIPT -->
 	<th:block layout:fragment="script"></th:block>

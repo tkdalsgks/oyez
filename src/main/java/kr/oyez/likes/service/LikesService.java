@@ -28,8 +28,10 @@ public class LikesService {
 			
 			if(likesCnt != 0) {
 				queryResult = likesRepository.deleteLikes(likes);
+				likesRepository.updateCountLikes(likes);
 			} else {
 				queryResult = insertLikes(likes);
+				likesRepository.updateCountLikes(likes);
 			}
 		}
 		
@@ -46,14 +48,9 @@ public class LikesService {
 				.regDate(StringUtils.date())
 				.build();
 		
-		likesRepository.save(insertLikes);
+		likesRepository.saveLikes(insertLikes);
 		queryResult = 1L;
 		
 		return queryResult;
-	}
-	
-	public Long updateCountLikes(Likes likes) {
-		
-		return likesRepository.updateCountLikes(likes);
 	}
 }

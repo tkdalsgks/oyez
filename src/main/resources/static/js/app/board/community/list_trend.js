@@ -63,27 +63,39 @@ function drawList(res) {
     res.commu.content.forEach(row => {
 		html += `
 			<li class="postGrid__block">
-				${row.profileImg != null ? 
+				${row.privateYn == 'N' ? 
 					`<a href="javascript:goViewPage(` + row.id + `);">
 						<div>
-							${row.titleImg != null ? `<img src="${row.titleImg}" class="pb__contentImg">` : `` }
+							${row.titleImg != '' && row.titleImg != null ? `<img src="${row.titleImg}" class="pb__contentImg">` : `` }
 						</div>
-					</a>` : ``
+					</a>` : 
+					`<div style="text-align: center;">
+						${row.titleImg != '' && row.titleImg != null ? `` : `` }
+					</div>`
 				}
 				<div class="postCard__content">
-					<a href="javascript:goViewPage(` + row.id + `);">
-						<div class="pc__title">
-							${row.title}
-						</div>
-						<div class="pc__content">
-							${row.content}
-						</div>
-						<div class="pc__footer">
-							<span>${timeForToday(row.regDate)}</span>
-							<span>·</span>
-							<span>${row.viewCnt}개의 댓글</span>
-						</div>
-					</a>
+					${row.privateYn == 'N' ?
+						`<a href="javascript:goViewPage(` + row.id + `);">
+							<div class="pc__title">
+								${row.title}
+							</div>
+							<div class="pc__content">
+								<div>${row.content}</div>
+							</div>
+						</a>` :
+						`${row.writerId == memberId ? 
+						`<div onclick="unlockBoard(` + row.id + `)" class="pc__title" style="align-items: center; display: flex;">
+							<img style="margin-right: 5px;" src="/img/app/board/lock.png">${row.title}
+						</div>` : 
+						`<div onclick="lockedBoard()" class="pc__title" style="align-items: center; display: flex;">
+							<img style="margin-right: 5px;" src="/img/app/board/lock.png">${row.title}
+						</div>`}`
+					}
+					<div class="pc__footer">
+						<span>${timeForToday(row.regDate)}</span>
+						<span>·</span>
+						<span>${row.commentCnt}개의 댓글</span>
+					</div>
 				</div>
 				<div class="postCard__footer">
 					<a href="javascript:goViewPage(` + row.id + `);">

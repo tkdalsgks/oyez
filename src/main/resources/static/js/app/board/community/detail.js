@@ -4,11 +4,12 @@ $(document).ready(function(){
 	}
 });
 
+/*
 ClassicEditor
     .create( document.querySelector( '#content' ), {
         extraPlugins: [uploadAdapterPlugin],
         language: 'ko',
-        ckfinder: { uploadUrl: '/upload' }
+        ckfinder: { uploadUrl: '/api/v1/upload' }
     })
     .then( editor => {
     	window.ckeditor_write = editor;
@@ -22,6 +23,7 @@ function uploadAdapterPlugin(editor) {
 		return uploadAdapter(loader);
 	}
 }
+*/
 
 // 게시글 삭제
 function deleteBoard() {
@@ -40,21 +42,25 @@ function deleteBoard() {
 			if(writer != memberId) {
 				toastr.warning('권한이 없는 게시글입니다.');
         	} else {
-        		let inputHtml = '';
-	            new URLSearchParams(location.search).forEach((value, key) => {
-	                inputHtml += `<input type="hidden" name="${key}" value="${value}" />`;
-	            })
-	            
-	            const formHtml = `
-	                <form id="deleteForm" action="/${id}/delete" method="post">
-	                    ${inputHtml}
-	                </form>
-	            `;
-	            
-	            const doc = new DOMParser().parseFromString(formHtml, 'text/html');
-	            const form = doc.body.firstChild;
-	            document.body.append(form);
-	            document.getElementById('deleteForm').submit();
+				
+				var path = "/api/v1/" + id + "/delete";
+				
+				$.ajax({
+					url: path,
+					type: 'POST',
+					success: function() {
+						history.go(-1)
+					},
+					error: function() {
+						toastr.options = {
+							progressBar: true,
+						 	showMethod: 'slideDown',
+						 	timeOut: 1500
+						};
+						toastr.error('서버와의 통신 에러입니다.', '잠시 후 재시도 바랍니다.');
+						return false;
+					}
+				});
         	}
 		}
 	});
@@ -81,7 +87,7 @@ function goChangePage() {
 }
 
 // 사용자 상세 페이지로 이동
-function goUserPage(id) {
+function goMemberPage(id) {
     location.href = '/member/detail' + `?id=${id}`;
 }
 
@@ -102,19 +108,30 @@ function openModal(id, writer, content) {
 
 // 댓글 작성
 function insertComment(boardId) {
-	var content = window.ckeditor_write.getData();
+	var content = document.getElementById('content');
 	
 	var headers = { "Content-Type": "application/json", "X-HTTP-Method-Override": "POST" };
 	
 	if(boardSeq == 2) {
 		var rating = document.getElementById('rating');
-		var params = { "boardId": boardId, "content": content, "writerId": memberId, "memberNickname": user, "rating": rating.value };
+		var params = JSON.stringify({ 
+			"boardId": boardId, 
+			"content": content.value, 
+			"writerId": memberId, 
+			"memberNickname": writerName.value,
+			"rating": rating.value 
+		});
 	} else {
-		var params = { "boardId": boardId, "content": content, "writerId": memberId, "memberNickname": user };
+		var params = JSON.stringify({ 
+			"boardId": boardId, 
+			"content": content.value, 
+			"writerId": memberId, 
+			"memberNickname": writerName.value
+		});
 	}
 	
-	if(content == "") {
-		window.ckeditor_write.focus();
+	if(content.value == "") {
+		content.focus();
 		toastr.warning('댓글을 작성하세요.');
 		return false;
 	} else {
@@ -122,24 +139,19 @@ function insertComment(boardId) {
 			if(rating.value >= 1) {
 				$.ajax({
 					url: comment_uri,
-					type: "POST",
+					type: 'POST',
 					headers: headers,
-					dataType: "json",
-					data: JSON.stringify(params),
-					success: function(response) {
-						if(response.result == false) {
-							toastr.warning('댓글을 등록하지 못하였습니다.');
-							return false;
-						} else {
-							// 포인트 적립
-							savePoints();
-							// 에디터 내용 초기화
-							window.ckeditor_write.setData("");
-							// 댓글 리스트 출력
-							printCommentList();
-						}
+					dataType: 'json',
+					data: params,
+					success: function() {
+						// 포인트 적립
+						//savePoints();
+						// 에디터 내용 초기화
+						content.value = "";
+						// 댓글 리스트 출력
+						printCommentList();
 					},
-					error: function(xhr, status, error) {
+					error: function() {
 						toastr.options = {
 							progressBar: true,
 						 	showMethod: 'slideDown',
@@ -156,24 +168,19 @@ function insertComment(boardId) {
 		} else {
 			$.ajax({
 				url: comment_uri,
-				type: "POST",
-				headers: headers,
-				dataType: "json",
-				data: JSON.stringify(params),
-				success: function(response) {
-					if(response.result == false) {
-						toastr.warning('댓글을 등록하지 못하였습니다.');
-						return false;
-					} else {
-						// 포인트 적립
-						savePoints();
-						// 에디터 내용 초기화
-						window.ckeditor_write.setData("");
-						// 댓글 리스트 출력
-						printCommentList();
-					}
+				type: 'POST',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: params,
+				success: function() {
+					// 포인트 적립
+					//savePoints();
+					// 에디터 내용 초기화
+					content.value = "";
+					// 댓글 리스트 출력
+					printCommentList();
 				},
-				error: function(xhr, status, error) {
+				error: function() {
 					toastr.options = {
 						progressBar: true,
 					 	showMethod: 'slideDown',
@@ -195,30 +202,32 @@ function enterkey() {
 };
 
 // 댓글 수정
-function updateComment(id) {
-	//var writer = document.getElementById("modalWriter");
-	//var content = document.getElementById("modalContent");
+function updateComment(id, memberNickname) {
 	
 	var uri = comment_uri + "/" + id;
-	var content = window.ckeditor_change.getData();
+	var content = document.getElementById('contentEdit' + id);
 	
 	var headers = { "Content-Type": "application/json", "X-HTTP-Method-Override": "PATCH" };
-	var params = { "id": id, "memberNickname": writerName.value, "content": content };
+	var params = JSON.stringify({ 
+		"id": id, 
+		"memberNickname": memberNickname, 
+		"content": content.value
+	});
 	
 	$.ajax({
 		url: uri,
-		type: "PATCH",
-		headers: headers,
-		dataType: "json",
-		data: JSON.stringify(params),
-		success: function(response) {
-			if (response.result == false) {
+		type: 'PATCH',
+		contentType: 'application/json',
+		dataType: 'json',
+		data: params,
+		success: function(res) {
+			if (res.result == false) {
 				toastr.warning('댓글을 수정하지 못하였습니다.');
 				return false;
-			} else if(response.result == "isUnauthorized") {
-				toastr.warning(response.message);
+			} else if(res.result == "isUnauthorized") {
+				toastr.warning(res.message);
 			} else {
-				toastr.success(response.message);			
+				toastr.success(res.message);			
 			}
 			printCommentList();
 			$("#commentModal").modal("hide");
@@ -253,9 +262,9 @@ function deleteComment(id) {
 
 			$.ajax({
 				url: uri,
-				type: "DELETE",
+				type: 'DELETE',
 				headers: headers,
-				dataType: "json",
+				dataType: 'json',
 				success: function(response) {
 					if (response.result == false) {
 						toastr.warning('댓글을 삭제하지 못하였습니다.');
@@ -266,7 +275,7 @@ function deleteComment(id) {
 						toastr.success(response.message);
 					}
 					printCommentList();
-					$("#commentModal").modal("hide");							
+					$("#commentModal").modal("hide");
 				},
 				error: function(xhr, status, error) {
 					toastr.options = {
@@ -286,16 +295,18 @@ function deleteComment(id) {
 function replyUpdate(id) {
 	
 	const reply = document.getElementById('reply' + id);
-	const replyForm = document.getElementById('replyForm' + id);
+	const replyEdit = document.getElementById('replyEdit' + id);
 	const replyUpdate = document.getElementById('replyUpdate' + id);
 	const replyCancel = document.getElementById('replyCancel' + id);
 	const replySave = document.getElementById('replySave' + id);
 	
 	reply.style.display = 'none';
+	replyEdit.style.display = '';
 	replyUpdate.style.display = 'none';
 	replyCancel.style.display = '';
 	replySave.style.display = '';
 	
+	/*
 	ClassicEditor
         .create( document.querySelector( '#replyEditor' + id ), {
             extraPlugins: [uploadAdapterPlugin],
@@ -307,25 +318,24 @@ function replyUpdate(id) {
         })
         .catch( error => {
             console.error( error );
-        } );
+    });
+    */
 }
 
 // 댓글 수정 취소(NEW)
 function replyCancel(id) {
 	
 	const reply = document.getElementById('reply' + id);
-	const replyForm = document.getElementById('replyForm' + id);
+	const replyEdit = document.getElementById('replyEdit' + id);
 	const replyUpdate = document.getElementById('replyUpdate' + id);
 	const replyCancel = document.getElementById('replyCancel' + id);
 	const replySave = document.getElementById('replySave' + id);
 	
 	reply.style.display = '';
-	replyForm.innerHTML = '';
+	replyEdit.style.display = 'none';
 	replyUpdate.style.display = '';
 	replyCancel.style.display = 'none';
 	replySave.style.display = 'none';
-	
-	replyForm.innerHTML = "<textarea id= 'replyEditor" + id + "' style='display: none;'></textarea>";
 }
 
 
@@ -367,10 +377,12 @@ function printCommentList() {
 									</div>
 								</div>
 							</div>
-							<div>
-								<span id="reply${comment.id}" class="desc comment-content">${comment.content}</span>
-								<div id="replyForm${comment.id}">
-									<textarea id="replyEditor${comment.id}" style="display: none;">${comment.content}</textarea>
+							<div style="line-height: 22px;">
+								<div id="reply${comment.id}" class="desc comment-content">
+									${comment.deleteYn == 'N' ? comment.content : comment.adminDeleteYn == 'N' ? '[삭제된 댓글입니다.]' : '[관리자에 의해 삭제된 댓글입니다.]'}
+								</div>
+								<div id="replyEdit${comment.id}" style="display: none;">
+									<textarea id="contentEdit${comment.id}" class="form-control comment-input textarea">${comment.content}</textarea>
 								</div>
 							</div>
 						</li>
@@ -378,8 +390,6 @@ function printCommentList() {
 				});
 			} else {
 				$(response.commentList).each(function(id, comment) {
-					console.log(id);
-					console.log(comment);
 					
 					commentsHtml += `
 						<li class="comment-li">
@@ -395,20 +405,22 @@ function printCommentList() {
 									</div>
 								</div>
 								<div th:if="${boardSeq == '2'}" style="display: flex; flex-direction: column;">
-									<div th:if="${memberId} == ${comment.writerId}" style="text-align: center;">
-										${memberId == comment.writerId ? 
-											`<span onclick="replyUpdate(${comment.id})" id="replyUpdate${comment.id}" style="align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '수정' : ''}</span>
-											<span onclick="replyCancel(${comment.id})" id="replyCancel${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '취소' : ''}</span>
-											<span onclick="updateComment('${comment.id}', '${comment.memberNickname}')" id="replySave${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer; background-color: skyblue;">${comment.deleteYn != 'Y' ? '저장' : ''}</span>
-											<span onclick="deleteComment(${comment.id})" style="align-items: center; font-size: 13px; cursor: pointer;">${comment.deleteYn != 'Y' ? '삭제' : ''}</span>` :
+									<div th:if="${memberId} == ${comment.memberId}" style="text-align: center;">
+										${memberId == comment.memberId ? 
+											`<span onclick="replyUpdate(${comment.id})" id="replyUpdate${comment.id}" style="align-items: center; font-size: 13px; cursor: pointer; color: var(--text1);">${comment.deleteYn != 'Y' ? '수정' : ''}</span>
+											<span onclick="replyCancel(${comment.id})" id="replyCancel${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer; color: var(--text1);">${comment.deleteYn != 'Y' ? '취소' : ''}</span>
+											<span onclick="updateComment('${comment.id}', '${comment.memberNickname}')" id="replySave${comment.id}" style="display: none; align-items: center; font-size: 13px; cursor: pointer; background-color: skyblue; color: var(--text1);">${comment.deleteYn != 'Y' ? '저장' : ''}</span>
+											<span onclick="deleteComment(${comment.id})" style="align-items: center; font-size: 13px; cursor: pointer; color: var(--text1);">${comment.deleteYn != 'Y' ? '삭제' : ''}</span>` :
 											`` }
 									</div>
 								</div>
 							</div>
-							<div>
-								<span id="reply${comment.id}" class="desc comment-content">${comment.content}</span>
-								<div id="replyForm${comment.id}">
-									<textarea id="replyEditor${comment.id}" style="display: none;">${comment.content}</textarea>
+							<div style="line-height: 22px;">
+								<div id="reply${comment.id}" class="desc comment-content">
+									${comment.deleteYn == 'N' ? comment.content : comment.adminDeleteYn == 'N' ? '[삭제된 댓글입니다.]' : '[관리자에 의해 삭제된 댓글입니다.]'}
+								</div>
+								<div id="replyEdit${comment.id}" style="display: none;">
+									<textarea id="contentEdit${comment.id}" class="form-control comment-input textarea">${textarea(comment.content)}</textarea>
 								</div>
 							</div>
 						</li>
@@ -425,8 +437,6 @@ function printCommentList() {
 function insertLikes(boardId) {
 	var headers = { "Content-Type": "application/json", "X-HTTP-Method-Override": "POST" };
 	var params = { "boardId": boardId, "memberId": memberId };
-	
-	console.log(insertLikes_uri)
 	
 	$.ajax({
 		url: insertLikes_uri,
@@ -464,14 +474,18 @@ function savePoints() {
 	var points = "10";
 	
 	var headers = { "Content-Type": "application/json", "X-HTTP-Method-Override": "POST" };
-	var params = { "pointsCd": pointsCd, "points": points, "memberId": memberId };
+	var params = JSON.stringify({ 
+		"pointsCd": pointsCd, 
+		"points": points, 
+		"memberId": memberId 
+	});
 	
 	$.ajax({
-		url: "/points",
+		url: "/api/v1/points",
 		type: "POST",
 		headers: headers,
 		dataType: "JSON",
-		data: JSON.stringify(params),
+		data: params,
 		success: function(response) {
 			if(response.result == false) {
 				toastr.warning('포인트 적립에 실패했습니다.');
@@ -494,7 +508,7 @@ function savePoints() {
 
 // 게시글 공개/비공개 전환
 function publicOrPrivate() {
-	var uri = "/" + id + "/private";
+	var uri = "/api/v1/" + id + "/private";
 	
 	if(privateYn == 'Y') {
 		privateYn = '공개';

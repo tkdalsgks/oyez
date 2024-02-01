@@ -47,14 +47,13 @@ function renderBoardInfo() {
 function saveBoard() {
 	
 	const form = document.getElementById('saveForm');
+	const notice = document.getElementById('isNotice');
+	const noticeYn = document.getElementById('noticeYn');
 	const filter = $("#filter option:selected").val();
-	const hashtag = document.getElementById('hashtag');
-	
 	const title = document.getElementById('title');
-	const titleImg = document.getElementById('titleImg');
 	
-	const fields = [form.title, form.writer];
-	const fieldNames = ['제목', '이름'];
+	const fields = [form.title, form.hashtag];
+	const fieldNames = ['제목', '해시태그'];
 	
 	for (let i = 0, len = fields.length; i < len; i++) {
 		isValid(fields[i], fieldNames[i]);
@@ -68,31 +67,63 @@ function saveBoard() {
 		if(filter == 'NONE') {
 			toastr.warning('필터를 선택하세요.');
 			return false;
-		} else if(hashtag == null) {
-			toastr.warning('해시태그를 최소 1개 입력하세요.');
-			return false;
 		} else {
 			if(board == null) {
 				//savePoints();
 			}
 			
 			var path = saveBoard_formAction;
-			var data = JSON.stringify({ 
-				"title": title.value, 
-				"content": ckeditor.getData(),
-				//"titleImg": titleImg.value,
-				"noticeYn": noticeYn.value,
-				"memberId": memberId,
-				"filter": filter,
-				"hashtag": hashtag.value 
-			});
+			
+			// 공지글 여부
+			if(notice.checked == true) {
+				noticeYn.value = 'Y'
+			} else {
+				noticeYn.value = 'N'
+			}
+			
+			// 타이틀 이미지 여부
+			var editorData = ckeditor.getData();
+			var s = editorData.indexOf("https://oyez-webservice.s3.ap-northeast-2.amazonaws.com/")
+			var e = editorData.indexOf("\"></figure>")
+			var e2 = editorData.indexOf("\">")
+			
+			var result = editorData.substring(s, e)
+			var result2 = editorData.substring(s, e2)
+			
+			var titleImg = null;
+			if(result.search("https://oyez-webservice.s3.ap-northeast-2.amazonaws.com/")) {
+				titleImg = result2;
+			} else if(result2.search("https://oyez-webservice.s3.ap-northeast-2.amazonaws.com/")) {
+				titleImg = result;
+			}
+			
+			if(titleImg != null) {
+				var data = JSON.stringify({ 
+					"title": title.value, 
+					"content": ckeditor.getData(),
+					"titleImg": titleImg,
+					"noticeYn": noticeYn.value,
+					"memberId": memberId,
+					"filter": filter,
+					"hashtag": hashtag.value 
+				});
+			} else {
+				var data = JSON.stringify({ 
+					"title": title.value, 
+					"content": ckeditor.getData(),
+					"noticeYn": noticeYn.value,
+					"memberId": memberId,
+					"filter": filter,
+					"hashtag": hashtag.value 
+				});
+			}
 			
 			$.ajax({
 				url: path,
 				type: 'POST',
 				contentType: 'application/json',
 				data: data,
-				success: function(res) {
+				success: function() {
 					swal.fire({
 						title: '게시글이 작성되었습니다.',
 						icon: 'warning',
@@ -100,14 +131,11 @@ function saveBoard() {
 						confirmButtonText: '확인',
 					}).then((result) => {
 						if(result.isConfirmed) {
-							console.log(JSON.stringify(res))
-							//location.href = "javascript:history.go(-1)";
+							location.href = "javascript:history.go(-1)";
 						}
 					});
 				},
-				error: function(res) {
-					alert(2)
-					console.log(JSON.stringify(res))
+				error: function() {
 				}
 			})
 		}

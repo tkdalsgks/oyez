@@ -29,6 +29,8 @@ public class Comment {
 	
 	private String deleteYn;
 	
+	private String adminDeleteYn;
+	
 	private String regDate;
 	
 	private String updtDate;

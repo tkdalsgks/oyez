@@ -75,13 +75,10 @@
 		<script th:inline="javascript">
 			var certified = [[ ${certified} ]];
 			var role = [[ ${role} ]];
-			var certifiedEmail_uri = [[ @{/} + ${memberId} + @{/account} ]];
+			var certifiedEmail_uri = [[ @{/api/v1/} + ${memberId} + @{/account} ]];
 		</script>
-		<!-- USER -->
+		<!-- MEMBER -->
 		<script type="text/javascript" src="/js/app/member/account.js"></script>
-		<!-- LOADING -->
-		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
-		<script type="text/javascript" src="/js/app/loading.js"></script>
 	</th:block>
 	
 </body>

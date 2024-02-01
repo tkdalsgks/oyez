@@ -10,7 +10,7 @@ body { display: -webkit-box; display: -ms-flexbox; display: flex; position: rela
 	background-color: var(--bg-page1); }
 a { text-decoration: none; cursor: pointer; }
 a:hover { color: var(--text1); }
-.container { height: auto; min-height: 100%; margin-bottom: 100px;}
+.container { height: auto; min-height: 100%; margin-bottom: 50px;}
 
 /* COMMON */
 .marginBottom5 { margin-bottom: 5px; }

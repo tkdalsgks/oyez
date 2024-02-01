@@ -4,12 +4,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
+import kr.oyez.board.review.dto.ReviewRequestDto;
 import kr.oyez.board.review.dto.ReviewResponseDto;
 
 @Repository
 public interface ReviewRepositoryCustom {
 
 	Slice<ReviewResponseDto> findByAll(Pageable pageable);
+	
+	void saveReview(ReviewRequestDto params);
+	
+	void saveHashtag(ReviewRequestDto params);
 	
 	Long countBoard();
 	

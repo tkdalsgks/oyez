@@ -2,6 +2,7 @@ package kr.oyez.likes.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import jakarta.persistence.EntityManager;
 import kr.oyez.board.community.domain.QBoard;
 import kr.oyez.common.utils.StringUtils;
 import kr.oyez.likes.entity.Likes;
@@ -10,10 +11,12 @@ import kr.oyez.member.domain.QMember;
 
 public class LikesRepositoryImpl implements LikesRepositoryCustom {
 	
+	private final EntityManager em;
 	private final JPAQueryFactory queryFactory;
 	
-	public LikesRepositoryImpl(JPAQueryFactory queryFactory) {
-		this.queryFactory = queryFactory;
+	public LikesRepositoryImpl(EntityManager em) {
+		this.em = em;
+		this.queryFactory = new JPAQueryFactory(em);
 	}
 	
 	QLikes likes = QLikes.likes;
@@ -35,7 +38,7 @@ public class LikesRepositoryImpl implements LikesRepositoryCustom {
 
 	@Override
 	public Long countBoardLikes(Likes params) {
-		// SELECT COUNT(1) FROM BOARD_LIKES WHERE BOARD_ID = #{ boardId } AND USER_ID = #{ userId } AND USE_YN = 'Y'
+		
 		return queryFactory.from(likes)
 				.select(likes.count())
 				.where(
@@ -45,7 +48,22 @@ public class LikesRepositoryImpl implements LikesRepositoryCustom {
 				)
 				.fetchOne();
 	}
-
+	
+	@Override
+	public void saveLikes(Likes params) {
+		
+		em.createNativeQuery("INSERT INTO BOARD_LIKES (BOARD_ID, MEMBER_ID, REG_DATE, USE_YN) "
+				           + "VALUES (?, ?, ?, ?)")
+			.setParameter(1, params.getBoardId())
+			.setParameter(2, params.getMemberId())
+			.setParameter(3, params.getRegDate())
+			.setParameter(4, params.getUseYn())
+			.executeUpdate();
+		
+		em.flush();
+		em.close();
+	}
+	
 	@Override
 	public Long deleteLikes(Likes params) {
 		
@@ -60,31 +78,18 @@ public class LikesRepositoryImpl implements LikesRepositoryCustom {
 	}
 	
 	@Override
-	public Long updateCountLikes(Likes params) {
-		// UPDATE BOARD B
-		//SET    B.LIKES_CNT = ( SELECT COUNT(1)
-		//		                FROM   BOARD_LIKES L
-		//		                WHERE  1=1
-		//		                AND    L.USE_YN = 'Y'
-		//		                AND    L.BOARD_ID = #{ boardId } )
-		//		WHERE  1=1
-		//		AND    B.DELETE_YN = 0
-		//		AND    B.ID = #{ boardId }
-		return null;/*queryFactory
-				.update(board)
-				.set(board.likesCnt, 
-						.selectTodayLikes(likes.count())
-						.from(likes)
-						.where(
-								likes.useYn.eq("Y"),
-								likes.boardId.eq(params.getBoardId())
-						)
-				)
-				.where(
-						board.useYn.eq("Y")
-				)
-				.execute();
-				*/
+	public void updateCountLikes(Likes params) {
+		
+		em.createNativeQuery("UPDATE BOARD A "
+				           + "SET A.LIKES_CNT = ( SELECT COUNT(1) FROM BOARD_LIKES B WHERE B.USE_YN = 'Y' AND B.BOARD_ID = ? ) "
+				           + "WHERE 1=1 "
+				           + "AND A.USE_YN = 'Y' "
+				           + "AND A.ID = ?")
+			.setParameter(1, params.getBoardId())
+			.setParameter(2, params.getBoardId())
+			.executeUpdate();
+		
+		em.flush();
+		em.close();
 	}
-
 }

@@ -93,6 +93,17 @@ $(function() {
 		const email = document.getElementById('memberEmail').value;
 		const exp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 		
+		if(role == 'EXPLORE') {
+			toastr.options = {
+				progressBar: true,
+			 	showMethod: 'slideDown',
+			 	timeOut: 2000
+			};
+			toastr.error('해당 계정은 사용할 수 없는 기능입니다.', '');
+			
+			return false;
+		}
+		
 		if(!email.match(exp)) {
 			toastr.warning('올바르지 않은 이메일 형식입니다.');
 	    	$('#check-email').prop('disabled', false);
@@ -126,7 +137,7 @@ $(function() {
 								code = data;
 								toastr.success('인증번호가 전송되었습니다.');
 							},
-							error: function(data) {
+							error: function() {
 								toastr.options = {
 									progressBar: true,
 								 	showMethod: 'slideDown',
@@ -161,7 +172,7 @@ $(function() {
 									code = data;
 									toastr.sucess('인증번호가 전송되었습니다.');
 								},
-								error: function(data) {
+								error: function() {
 									toastr.options = {
 										progressBar: true,
 									 	showMethod: 'slideDown',
@@ -173,7 +184,7 @@ $(function() {
 						}
 					}
 			    },
-				error: function(data) {
+				error: function() {
 					toastr.options = {
 						progressBar: true,
 					 	showMethod: 'slideDown',
@@ -229,7 +240,7 @@ $(function() {
 					toastr.warning('인증번호를 정확하게 입력하세요.');
 				}
 			},
-			error: function(result) {
+			error: function() {
 				toastr.options = {
 					progressBar: true,
 				 	showMethod: 'slideDown',

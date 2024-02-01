@@ -35,6 +35,7 @@
 				<form id="saveForm" method="post" autocomplete="off">
 					<!-- 서버로 전달할 공지글 여부 -->
 					<input type="hidden" id="noticeYn" name="noticeYn" />
+					<input type="hidden" id="privateYn" name="privateYn" />
 					<input type="hidden" id="filterId" name="filterId" />
 					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${memberName}" />
 					<input type="hidden" id="IDate" name="IDate" class="write-date" />
@@ -105,9 +106,6 @@
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
 		<script type="text/javascript" src="/js/app/board/review/write.js"></script>
 		<script type="text/javascript" src="/js/app/board/uploadAdapter.js"></script>
-		<!-- LOADING -->
-		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
-		<script type="text/javascript" src="/js/app/loading.js"></script>
 	</th:block>
 	
 </body>

@@ -15,17 +15,21 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import jakarta.persistence.EntityManager;
 import kr.oyez.board.community.domain.QBoard;
+import kr.oyez.board.review.dto.ReviewRequestDto;
 import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.common.domain.QCommon;
 import kr.oyez.member.domain.QMember;
 
 public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 	
+	private final EntityManager em;
 	private final JPAQueryFactory queryFactory;
 	
-	public ReviewRepositoryImpl(JPAQueryFactory queryFactory) {
-		this.queryFactory = queryFactory;
+	public ReviewRepositoryImpl(EntityManager em) {
+		this.em = em;
+		this.queryFactory = new JPAQueryFactory(em);
 	}
 	
 	QCommon common = QCommon.common;
@@ -78,6 +82,49 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 				);
 		
 		return PageableExecutionUtils.getPage(content, pageable, total::fetchOne);
+	}
+	
+	@Override
+	public void saveReview(ReviewRequestDto params) {
+		
+		em.createNativeQuery("INSERT INTO BOARD "
+				           + "(BOARD_SEQ, TITLE, CONTENT, MEMBER_ID, TITLE_IMG, "
+				           + "FILTER, RATING, VIEW_CNT, COMMENT_CNT, LIKES_CNT, "
+				           + "NOTICE_YN, PRIVATE_YN, USE_YN, REG_DATE) "
+				           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			.setParameter(1, params.getBoardSeq())
+			.setParameter(2, params.getTitle())
+			.setParameter(3, params.getContent())
+			.setParameter(4, params.getWriterId())
+			.setParameter(5, params.getTitleImg())
+			.setParameter(6, params.getFilter())
+			.setParameter(7, params.getRating())
+			.setParameter(8, params.getViewCnt())
+			.setParameter(9, params.getCommentCnt())
+			.setParameter(10, params.getLikesCnt())
+			.setParameter(11, params.getNoticeYn())
+			.setParameter(12, params.getPrivateYn())
+			.setParameter(13, params.getUseYn())
+			.setParameter(14, params.getRegDate())
+			.executeUpdate();
+		
+		em.flush();
+		em.close();
+	}
+	
+	@Override
+	public void saveHashtag(ReviewRequestDto params) {
+		
+		em.createNativeQuery("INSERT INTO HASHTAG (BOARD_ID, HASHTAG, USE_YN, REG_DATE) "
+				           + "VALUES (?, ?, ?, ?)")
+			.setParameter(1, params.getId())
+			.setParameter(2, params.getHashtag())
+			.setParameter(3, params.getUseYn())
+			.setParameter(4, params.getRegDate())
+			.executeUpdate();
+		
+		em.flush();
+		em.close();
 	}
 	
 	@Override

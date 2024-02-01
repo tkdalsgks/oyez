@@ -167,7 +167,7 @@ public class MemberService {
 						
 						printWriter = response.getWriter();
 						response.setContentType("text/html");
-						String fileUrl = "https://toy-webservice.s3.ap-northeast-2.amazonaws.com/images/" + getMemberId() + "/" + fileName;
+						String fileUrl = "https://oyez-webservice.s3.ap-northeast-2.amazonaws.com/images/" + getMemberId() + "/" + fileName;
 						
 						// 프로필사진 업데이트
 						log.info("@@@ " + getMemberId());

@@ -6,15 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import kr.oyez.board.community.domain.Board;
-import kr.oyez.board.community.dto.CommunityRequestDto;
 import kr.oyez.board.community.repository.custom.CommunityRepositoryCustom;
 
 @Repository
 public interface CommunityRepository extends JpaRepository<Board, Long>, CommunityRepositoryCustom {
 
 	Optional<Board> findById(Long id);String findByBoardSeq(Long id);
-	
-	Object save(CommunityRequestDto params);
 
 	//public Optional<Board> findById(Long id);
 	//public void saveBoard(FreeBoardRequestDto params);

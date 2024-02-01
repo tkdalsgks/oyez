@@ -2,8 +2,13 @@ package kr.oyez.comment.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 
-import lombok.Data;
-@Data
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Getter
+@NoArgsConstructor
 public class CommentResponseDto {
 	
 	private Long id;
@@ -22,13 +27,15 @@ public class CommentResponseDto {
 	
 	private String deleteYn;
 	
+	private String adminDeleteYn;
+	
 	private String regDate;
 	
 	private String updtDate;
-
+	
 	@QueryProjection
 	public CommentResponseDto(Long id, Long boardId, String content, String memberId, String memberNickname,
-			String profileImg, int rating, String deleteYn, String regDate, String updtDate) {
+			String profileImg, int rating, String deleteYn, String adminDeleteYn, String regDate, String updtDate) {
 		this.id = id;
 		this.boardId = boardId;
 		this.content = content;
@@ -37,6 +44,7 @@ public class CommentResponseDto {
 		this.profileImg = profileImg;
 		this.rating = rating;
 		this.deleteYn = deleteYn;
+		this.adminDeleteYn = adminDeleteYn;
 		this.regDate = regDate;
 		this.updtDate = updtDate;
 	}

@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import kr.oyez.board.community.domain.Board;
+import kr.oyez.board.review.dto.ReviewRequestDto;
 import kr.oyez.board.review.dto.ReviewResponseDto;
 import kr.oyez.board.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +30,14 @@ public class ReviewService {
 		return reviewRepository.findByBoard(id);
 	}
 
-	public void save(Board params) {
+	public void saveReview(ReviewRequestDto params) {
 		
-		reviewRepository.save(params);
+		reviewRepository.saveReview(params);
+	}
+	
+	public void saveHashtag(ReviewRequestDto params) {
+		
+		reviewRepository.saveHashtag(params);
 	}
 	
 	/*

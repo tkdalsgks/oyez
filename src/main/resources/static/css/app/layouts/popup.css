@@ -18,7 +18,7 @@
 
 .popup-content__item { display: block; width: 100%; padding: .5rem 1rem; clear: both; font-weight: 400; text-align: inherit; white-space: nowrap;
 	background-color: transparent; border: 0; cursor: pointer; color: var(--text1); }
-.popup-content__item:hover { background-color: #E9ECEF; }
+.popup-content__item:hover { background: var(--bg-element1); }
 .popup__line { margin-top: .5rem; margin-bottom: .5rem; border-top: 1px solid var(--border3); }
 
 .popup__admin { bottom: 0; }

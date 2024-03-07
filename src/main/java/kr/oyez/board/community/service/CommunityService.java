@@ -71,19 +71,14 @@ public class CommunityService {
 		communityRepository.saveCommunity(params);
 	}
 	
-	public void saveHashtag(CommunityRequestDto params) {
-		
-		communityRepository.saveHashtag(params);
-	}
-	
 	public String findByBoardSeq(Long id) {
 		
 		return communityRepository.findByBoardSeq(id);
 	}
 
-	public void updateBoard(CommunityRequestDto params) {
+	public void modifyBoard(CommunityRequestDto params) {
 		
-		communityRepository.updateBoard(params);
+		communityRepository.modifyBoard(params);
 	}
 
 	public void deleteBoard(CommunityRequestDto params) {

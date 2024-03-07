@@ -43,10 +43,12 @@ public class CommunityRequestDto {
 	
 	private String regDate;
 	
+	private String updtDate;
+	
 	@QueryProjection
 	public CommunityRequestDto(Long id, String boardSeq, String title, String content, String writerId, String titleImg,
 			String filter, String hashtag, int rating, int viewCnt, int commentCnt, int likesCnt, String noticeYn,
-			String privateYn, String useYn, String regDate) {
+			String privateYn, String useYn, String regDate, String updtDate) {
 		this.id = id;
 		this.boardSeq = boardSeq;
 		this.title = title;
@@ -63,5 +65,6 @@ public class CommunityRequestDto {
 		this.privateYn = privateYn;
 		this.useYn = useYn;
 		this.regDate = regDate;
+		this.updtDate = updtDate;
 	}
 }

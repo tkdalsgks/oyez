@@ -21,6 +21,8 @@
 <link rel="stylesheet" th:href="@{/css/lib/toastr.css}" />
 <link rel="stylesheet" th:href="@{/css/app/index/index.css}" />
 <link rel="stylesheet" th:href="@{/css/app/common/default.css}" />
+<!-- ROOM -->
+<link rel="stylesheet" th:href="@{/css/app/chat/room.css}" />
 	
 <!-- CSS -->
 <th:block layout:fragment="css"></th:block>
@@ -43,7 +45,7 @@
 	<th:block th:replace="~{fragments/footer :: footer}"></th:block>
 	
 	<!-- POPUP : CHAT -->
-	<!--<th:block th:replace="~{fragments/chat :: chat}"></th:block>-->
+	<th:block th:replace="~{fragments/chat :: chat}"></th:block>
 	
 	<!-- POPUP : MENU -->
 	<th:block th:replace="~{fragments/menu :: menu}"></th:block>

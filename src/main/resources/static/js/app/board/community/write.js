@@ -34,13 +34,18 @@ function renderBoardInfo() {
 	}
 	
 	const form = document.getElementById('saveForm');
-	const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
-	form.isNotice.checked = board.noticeYn;
-	form.regDate.value = moment(board.regDate).format('YYYY/MM/DD HH:mm');
+	const fields = ['id', 'title', 'content', 'writer', 'noticeYn', 'privateYn'];
+	if(board.noticeYn == 'Y') {
+		form.isNotice.checked = board.noticeYn;		
+	}
+	if(board.privateYn == 'Y') {
+		form.isPrivate.checked = board.privateYn;		
+	}
+	
+	//form.regDate.value = moment(board.regDate).format('YYYY/MM/DD HH:mm');
 	
 	fields.forEach(field => {
 		form[field].value = board[field];
-		console.log(form[field].value)
 	});
 }
 
@@ -54,6 +59,9 @@ function saveBoard() {
 	const privateYn = document.getElementById('privateYn');
 	const filter = $("#filter option:selected").val();
 	const title = document.getElementById('title');
+	
+	console.log(title.value)
+	console.log(ckeditor.getData())
 	
 	const fields = [form.title, form.hashtag];
 	const fieldNames = ['제목', '해시태그'];
@@ -90,8 +98,6 @@ function saveBoard() {
 			} else {
 				privateYn.value = 'N'
 			}
-			
-			console.log(privateYn.value)
 			
 			// 타이틀 이미지 여부
 			var editorData = ckeditor.getData();

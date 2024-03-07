@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="chat">
+	<div id="popup__background" class="background__chat">
+		<div class="window">
+		
+			<div class="popup__chat">
+				<div class="close__chat">
+					<span class="navbar-brand-logo">Oyez</span>
+					<span id="close__chat" class="btn__close" onclick="close__chat();"></span>
+				</div>
+	   		
+				<!-- MENU : Chat -->
+		   		<div id="popup__chat-room" class="popup__chat-room">
+			   		<!-- Chat Room Create -->
+					<div id="chat__list-chatcreate" class="chat__list-chatcreate">
+				        <input type="text" id="roomName" name="name" class="chat__list-input form-control" placeholder="채팅방 이름을 입력하세요.">
+				        <button class="btn btn-secondary active" id="createChatRoom">채팅방 개설</button>
+				    </div>
+				    
+				    <!-- Chat Room List -->
+				    <div class="chat__list-chatrooms">
+						<table>
+							<thead>
+								<tr>
+									<th style="width: 50%; color: var(--text1);">채팅방</th>
+									<th style="width: 25%; color: var(--text1);">개설일</th>
+									<th style="width: 25%; color: var(--text1);">개설자</th>
+								</tr>
+							</thead>
+							<tbody id="chat__list-chatrooms">
+							</tbody>
+						</table>
+					    <!--<div id="chat__list-chatrooms" class="chat__list-chatrooms"></div>-->
+					</div>
+			    </div>
+		    </div>
+		    
+		    <div><div></div></div>
+		</div>
+	</div>
+	
+	<div id="popup__background2" class="background__chat2">
+		<div class="window">
+			<div class="popup__chat2">
+				<div class="close__chat2">
+					<span class="navbar-brand-logo">Oyez</span>
+					<span id="close__chat2" class="btn__close" onclick="close__chat2();"></span>
+				</div>
+				
+				<div id="popup__chat-room" class="popup__chat-room">
+					<div class="chat__list-chatrooms">
+						<div class="col-6">
+				            <span id="roomName" class="chat__roomName"></span>
+				        </div>
+				        
+				        <div>
+				            <div id="msgArea" class="col chat__msgArea"></div>
+				            <div class="chat__msgArea-input input-group">
+				                <input type="text" id="msg" class="form-control">
+				                <div class="input-group-append">
+				                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+				                </div>
+				            </div>
+				        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -96,17 +97,12 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/community/save")
-	public String community_save(@RequestBody CommunityRequestDto params, Model model) {
+	public void community_save(@RequestBody CommunityRequestDto params, Model model) {
 		log.info("@@@ [POST] Community New Post");
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		
 		saveCommu(params, sessionMember);
-		saveCommuHashtag(params);
-		
-		MessageDto message = new MessageDto("게시글 생성이 완료되었습니다.", "/community/recent", RequestMethod.GET, null);
-		
-		return StringUtils.showMessageAndRedirect(message, model);
 	}
 	
 	/**
@@ -114,17 +110,12 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/review/save")
-	public String review_save(@RequestBody ReviewRequestDto params, Model model) {
+	public void review_save(@RequestBody ReviewRequestDto params, Model model) {
 		log.info("@@@ [POST] Review New Post boardId");
 		
 		SessionMember sessionMember = (SessionMember) session.getAttribute("SessionMember");
 		
 		saveReview(params, sessionMember);
-		saveReviewHashtag(params);
-		
-		MessageDto message = new MessageDto("게시글 생성이 완료되었습니다.", "/review/recent", RequestMethod.GET, null);
-		
-		return StringUtils.showMessageAndRedirect(message, model);
 	}
 	
 	/**
@@ -132,14 +123,12 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/{boardId}/modify")
-	public String update(@PathVariable(value = "boardId") Long id, final CommunityRequestDto params, Model model) {
+	public void update(@PathVariable(value = "boardId") Long id, @RequestBody CommunityRequestDto params, Model model) {
 		log.info("@@@ [POST] Post Modify board_id {}", id);
 		
-		updateBoard(params);
+		System.out.println("@@@@@@@@@@@@@@@@@@ " + params.getPrivateYn());
 		
-		MessageDto message = new MessageDto("게시글 수정이 완료되었습니다.", "javascript:history.go(-2)", RequestMethod.POST, null);
-		
-		return StringUtils.showMessageAndRedirect(message, model);
+		modifyBoard(id, params);
 	}
 	
 	/**
@@ -147,19 +136,10 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/{boardId}/delete")
-	public String delete(@PathVariable(value = "boardId") Long id, final CommunityRequestDto params, Model model) {
+	public void delete(@PathVariable(value = "boardId") Long id, Model model) {
 		log.info("@@@ [POST] Delete Post boardId {}" + id);
 		
-		CommunityRequestDto deleteBoard = CommunityRequestDto.builder()
-				.id(id)
-				.useYn("N")
-				.build();
-				
-		communityService.deleteBoard(deleteBoard);
-		
-		MessageDto message = new MessageDto("게시글 삭제가 완료되었습니다.", "javascript:history.go(-1)", RequestMethod.GET, null);
-		
-		return StringUtils.showMessageAndRedirect(message, model);
+		deleteBoard(id);
 	}
 	
 	/**
@@ -167,7 +147,7 @@ public class BoardApiController {
 	 */
 	@Transactional
 	@PostMapping("/{boardId}/private")
-	public String publicOrPrivate(@PathVariable(value = "boardId") Long id, Model model) {
+	public void publicOrPrivate(@PathVariable(value = "boardId") Long id, Model model) {
 		log.info("@@@ [POST] Public Or Private Post boardId {}" + id);
 		
 		Optional<Board> params = communityService.findById(id);
@@ -177,11 +157,7 @@ public class BoardApiController {
 			communityService.publicBoard(id);
 		} else if("N".equals(privateYn)) {
 			communityService.privateBoard(id);
-		}	
-		
-		MessageDto message = new MessageDto("게시글 전환이 완료되었습니다.", "/free", RequestMethod.POST, null);
-		
-		return StringUtils.showMessageAndRedirect(message, model);
+		}
 	}
 	
 	private void saveCommu(CommunityRequestDto params, SessionMember sessionMember) {
@@ -194,6 +170,7 @@ public class BoardApiController {
 				.noticeYn(params.getNoticeYn())
 				.privateYn(params.getPrivateYn())
 				.filter(params.getFilter())
+				.hashtag(params.getHashtag())
 				.useYn("Y")
 				.regDate(StringUtils.dateTime())
 				.build();
@@ -211,6 +188,7 @@ public class BoardApiController {
 				.noticeYn(params.getNoticeYn())
 				.privateYn("N")
 				.filter(params.getFilter())
+				.hashtag(params.getHashtag())
 				.useYn("Y")
 				.regDate(StringUtils.dateTime())
 				.build();
@@ -218,34 +196,25 @@ public class BoardApiController {
 		reviewService.saveReview(saveReview);
 	}
 	
-	private void saveCommuHashtag(CommunityRequestDto params) {
-		CommunityRequestDto saveHashtag = CommunityRequestDto.builder()
-				.id(params.getId())
-				.hashtag(params.getHashtag())
-				.useYn("Y")
-				.regDate(StringUtils.dateTime())
-				.build();
-		
-		communityService.saveHashtag(saveHashtag);
-	}
-	
-	private void saveReviewHashtag(ReviewRequestDto params) {
-		CommunityRequestDto saveHashtag = CommunityRequestDto.builder()
-				.id(params.getId())
-				.hashtag(params.getHashtag())
-				.useYn("Y")
-				.regDate(StringUtils.dateTime())
-				.build();
-		
-		communityService.saveHashtag(saveHashtag);
-	}
-	
-	private void updateBoard(final CommunityRequestDto params) {
-		CommunityRequestDto updateBoard = CommunityRequestDto.builder()
+	private void modifyBoard(Long id, final CommunityRequestDto params) {
+		CommunityRequestDto modifyBoard = CommunityRequestDto.builder()
+				.id(id)
 				.title(params.getTitle())
 				.content(params.getContent())
+				.noticeYn(params.getNoticeYn())
+				.privateYn(params.getPrivateYn())
 				.build();
 		
-		communityService.updateBoard(updateBoard);
+		communityService.modifyBoard(modifyBoard);
+	}
+	
+	private void deleteBoard(Long id) {
+		CommunityRequestDto deleteBoard = CommunityRequestDto.builder()
+				.id(id)
+				.useYn("N")
+				.updtDate(StringUtils.dateTime())
+				.build();
+				
+		communityService.deleteBoard(deleteBoard);
 	}
 }

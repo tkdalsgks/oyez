@@ -30,8 +30,11 @@ function drawNotice(res) {
 	res.notice.forEach(row => {
 		html += `
 			<li>
-				<a href="">
-					${row.title} (${timeForToday(row.regDate)})
+				<a href="/posts/${row.id}" style="display: flex; align-items: center;">
+					<div style="display: flex; align-items: center;">
+						<img style="width: 25px; margin-right: 5px;" src="/img/upload/warning.svg">
+						${row.title}
+					</div>
 				</a>
 			</li>
 		`;

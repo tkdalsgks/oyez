@@ -19,8 +19,22 @@
 	
 	<!-- MAIN : CONTENT -->
 	<main layout:fragment="content" class="container">
-		<div class="main">
-			<img src="/img/upload/main_image.jpg" style="width: 75%">
+		<div>
+			<div style="background: var(--bg-element4); padding: 1.25rem 1.25rem; margin-top: 1rem; border-radius: .75rem;">
+				<span style="color: var(--text1);">오늘 하루</span>
+			</div>
+			<div>
+				
+			</div>
+		</div>
+		
+		<div>
+			<div style="background: var(--bg-element4); padding: 1.25rem 1.25rem; margin-top: 1rem; border-radius: .75rem;">
+				<span style="color: var(--text1);">리뷰</span>
+			</div>
+			<div>
+				
+			</div>
 		</div>
 	</main>
 	
@@ -29,6 +43,7 @@
 		<!-- SETTINGS -->
 		<script th:inline="javascript">
 			var certified = [[ ${certified} ]]
+			var membername = [[ ${memberName} ]]
 			var memberId = [[ ${memberId} ]]
 			var role = [[ ${role} ]]
 		</script>

@@ -14,8 +14,6 @@ public interface ReviewRepositoryCustom {
 	
 	void saveReview(ReviewRequestDto params);
 	
-	void saveHashtag(ReviewRequestDto params);
-	
 	Long countBoard();
 	
 	ReviewResponseDto findByBoard(Long id);

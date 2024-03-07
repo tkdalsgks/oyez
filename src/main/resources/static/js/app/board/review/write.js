@@ -34,8 +34,17 @@ function renderBoardInfo() {
 	}
 	
 	const form = document.getElementById('saveForm');
-	const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
-	form.isNotice.checked = board.noticeYn;
+	const fields = ['id', 'title', 'content', 'writer', 'noticeYn', 'privateYn'];
+	if(board.noticeYn == 'Y') {
+		form.isNotice.checked = board.noticeYn;		
+	}
+	if(board.privateYn == 'Y') {
+		form.isPrivate.checked = board.privateYn;		
+	}
+	
+	console.log("1 " + board.noticeYn)
+	console.log("2 " + board.privateYn)
+	
 	//form.regDate.value = moment(board.regDate).format('YYYY/MM/DD HH:mm');
 	
 	fields.forEach(field => {
@@ -49,8 +58,13 @@ function saveBoard() {
 	const form = document.getElementById('saveForm');
 	const notice = document.getElementById('isNotice');
 	const noticeYn = document.getElementById('noticeYn');
+	const private = document.getElementById('isPrivate');
+	const privateYn = document.getElementById('privateYn');
 	const filter = $("#filter option:selected").val();
 	const title = document.getElementById('title');
+	
+	console.log(title.value)
+	console.log(ckeditor.getData())
 	
 	const fields = [form.title, form.hashtag];
 	const fieldNames = ['제목', '해시태그'];
@@ -81,6 +95,13 @@ function saveBoard() {
 				noticeYn.value = 'N'
 			}
 			
+			// 비공개 여부
+			if(private.checked == true) {
+				privateYn.value = 'Y'
+			} else {
+				privateYn.value = 'N'
+			}
+			
 			// 타이틀 이미지 여부
 			var editorData = ckeditor.getData();
 			var s = editorData.indexOf("https://oyez-webservice.s3.ap-northeast-2.amazonaws.com/")
@@ -103,6 +124,7 @@ function saveBoard() {
 					"content": ckeditor.getData(),
 					"titleImg": titleImg,
 					"noticeYn": noticeYn.value,
+					"privateYn": privateYn.value,
 					"memberId": memberId,
 					"filter": filter,
 					"hashtag": hashtag.value 
@@ -112,6 +134,7 @@ function saveBoard() {
 					"title": title.value, 
 					"content": ckeditor.getData(),
 					"noticeYn": noticeYn.value,
+					"privateYn": privateYn.value,
 					"memberId": memberId,
 					"filter": filter,
 					"hashtag": hashtag.value 
@@ -140,8 +163,6 @@ function saveBoard() {
 			})
 		}
 	}
-	
-	alert(document.querySelector(`.star span`).style.width);
 }
 
 // 게시글 작성 취소

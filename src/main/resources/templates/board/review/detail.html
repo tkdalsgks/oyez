@@ -6,11 +6,11 @@
 
 <head>
 <meta charset="UTF-8">
-<title>OYEZ, [[ ${review.title} ]]</title>
+<title>OYEZ, </title>
 
 <th:block layout:fragment="css">
 	<!-- POPUP -->
-	<link rel="stylesheet" th:href="@{/css/app/popup.css}" />
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
 	<!-- BOARD -->
 	<link rel="stylesheet" th:href="@{/css/app/board/board.css}" />
 	<link rel="stylesheet" th:href="@{/css/app/button.css}" />
@@ -22,7 +22,7 @@
 
 <body>
 
-	<!-- REVIEW_DETAIL : CONTENT -->
+	<!-- COMMUNITY_DETAIL : CONTENT -->
 	<main layout:fragment="content" class="container">
 
 		<!-- 현재 경로 -->
@@ -30,43 +30,52 @@
 
 		<!-- 본문 내용 -->
 		<div class="content">
-			<input type="hidden" id="writer" name="writer" th:value="${review.writerId}">
-			<input type="hidden" id="writerName" name="writerName" th:value="${review.writer}">
-			<input type="hidden" id="userId" name="userId" th:value="${userId}">
-
+			<input type="hidden" id="writer" name="writer" th:value="${board.writerId}">
+			<input type="hidden" id="writerName" name="writerName" th:value="${board.writer}">
+			<input type="hidden" id="memberId" name="memberId" th:value="${memberId}">
 			<section>
 				<div class="board-title">
-					<span class="board-title1" id="board-title">[[ ${review.title} ]]</span>
-					<span class="board-udate">[[${review.UDate != null ? '수정됨' : ''} ]]</span>
+					<span class="board-title1" id="board-title">
+						<span th:if="${board.privateYn == 'N'}">[[ ${board.title} ]]</span>
+						<span th:unless="${board.privateYn == 'N'}"><img style="margin-right: 5px;" src="/img/app/board/lock.png">[[ ${board.title} ]]</span>
+						<span class="board-udate">[[${board.updtDate != null ? '수정됨' : ''} ]]</span>
+					</span>
 				</div>
 				
 				<div class="board-info">
-					<img th:src="${review.profileImg}" class="board-info__img">
+					<img th:src="${board.profileImg}" class="board-info__img">
 					<div style="flex-direction: column; flex-grow: 1;">
 						<div style="display: flex; justify-content: space-between; align-items: center;">
-							<a th:href="@{/member/detail?id=} + ${review.writerNo}"><span class="board-writer">[[ ${review.writer} ]]</span></a>
-							<span th:if="${userId == review.writerId}">
+							<a th:href="@{/} + ${board.writerId} + @{/activity}"><span class="board-writer">[[ ${board.writer} ]]</span></a>
+							<span th:if="${memberId == board.writerId}">
+								<a th:if="${board.privateYn == 'N'}" class="board-private_btn" style="cursor: pointer;" onclick="publicOrPrivate();">공개</a>
+								<a th:unless="${board.privateYn == 'N'}" class="board-private_btn" style="cursor: pointer;" onclick="publicOrPrivate();">비공개</a>
 								<a class="board-change_btn" style="cursor: pointer;" onclick="goChangePage();">수정</a>
 								<a class="board-delete_btn" style="cursor: pointer;" onclick="deleteBoard();">삭제</a>
 							</span>
 						</div>
 						<div style="display: flex; justify-content: space-between; align-items: center;">
+							<span class="board-time" th:text="${#temporals.format(#temporals.createDate(board.regDate, 'yyyyMMddHHmmss'), 'yyyy년 M월 d일')}"></span>	
 							<div style="display: flex; align-items: center;">
 								<div class="board-view">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-4 w-4 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-									[[ ${review.viewCnt} ]]
+									[[ ${board.viewCnt} ]]
 								</div>
 								
 								<div id="board-likes" class="board-likes" th:onclick="insertLikes([[ ${board.id} ]]);">
 									<svg viewBox="0 0 24 24"><path fill="currentColor" d="m18 1-6 4-6-4-6 5v7l12 10 12-10V6z"></path></svg>
-					            	[[ ${review.likesCnt} ]]
+					            	[[ ${board.likesCnt} ]]
 								</div>
 				            </div>
 						</div>
 					</div>
 				</div>
 				<div class="board-contents">
-					<p class="board-content" th:utext="${review.content}" style="display: none;"></p>
+					<p class="board-content" th:utext="${board.content}" style="display: none;"></p>
+					<div th:if="${board.hashtag != null}" style="margin-top: 50px;">
+						<span class="hashtag tagify__tag" th:text="${board.hashtag}">
+						</span>
+					</div>
 				</div>
 			</section>
 		</div>
@@ -75,29 +84,33 @@
 		<div class="box-content">
 			<div class="card-content">
 				<div class="clearfix comment-main">
-					<span class="box-title pull-left comment-main-name">
-						<span th:text="${comment}"></span>개의 댓글
-					</span>
+					<span class="box-title pull-left comment-main-name"><span
+						th:text="${comment}"></span>개의 댓글</span>
 				</div>
 
 				<form class="form-horizontal form-view" onsubmit="return false;">
 					<div class="comment-write">
-						<div class="comment-input-group">
-							<textarea sec:authorize="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_USER')" id="content" class="form-control comment-input" placeholder="댓글은 누구나 편안하게 남겨주세요."></textarea><br>
-							<textarea sec:authorize="hasRole('ROLE_GUEST')" id="content" class="form-control comment-input" disabled="disabled"></textarea><br>
-							<div class="write-star">
-								<span class="star-name">별점</span>
-								<span id="star" class="star">
-									★★★★★
-									<span>★★★★★</span>
-									<input id="rating" type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
+						<div th:if="${certified != null}" class="comment-input-group">
+							<textarea id="content" class="form-control comment-input textarea" placeholder="댓글을 작성해주세요."></textarea>
+							<div th:if="${board.boardSeq == '2' && certified != null}" style="margin-top: 1rem; align-items: baseline;">
+								<span class="star-name">
+									<span id="star" class="star">
+										★★★★★
+										<span>★★★★★</span>
+										<input id="rating" type="range" oninput="drawStar(this)" value="0" step="1" min="0" max="10">
+									</span>
 								</span>
-								<button sec:authorize="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_USER')" class="btn btn-primary free-btn" th:onclick="insertComment([[ ${review.id} ]]);">댓글작성</button>
+								<button th:if="${certified != null}" class="comment-btn" th:onclick="insertComment([[ ${board.id} ]]);">댓글작성</button>
 							</div>
-							<span sec:authorize="hasRole('ROLE_GUEST')" style="display: inline-flex; align-items: center; transform: translate(10%, -310%);">
+							<div th:unless="${board.boardSeq == '2'}" style="margin-top: 1rem;">
+								<button th:if="${certified != null}" class="comment-btn" th:onclick="insertComment([[ ${board.id} ]]);">댓글작성</button>
+							</div>
+						</div>
+						<div th:unless="${certified != null}" class="comment-input-group">
+							<span style="margin-left: .5rem;">
 								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5 shrink-0 text-gray-400 group-hover:text-gray-500">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-								<span style="margin-left: .25rem;"> 댓글을 쓰려면 <a th:onclick="goSettings([[ ${userId} ]]);" style="color: blue; text-decoration: underline; cursor: pointer;">이메일 인증</a>이 필요합니다.</span>
+								<span style="margin-left: .25rem;"> 댓글을 작성하려면 <a th:onclick="goSettings([[ ${memberId} ]]);" style="color: blue; text-decoration: underline; cursor: pointer;">계정 인증</a>이 필요합니다.</span>
 							</span>
 						</div>
 						<div class="comment-input-btn"></div>
@@ -107,20 +120,20 @@
 			</div>
 		</div>
 	</main>
-	
-	<!-- REVIEW_DETAIL : SCRIPT -->
+
+	<!-- COMMUNITY_DETAIL : SCRIPT -->
 	<th:block layout:fragment="script">
 		<!-- SETTINGS -->
 		<script th:inline="javascript">
 			var referer = [[ ${referer} ]];
 			var certified = [[ ${certified} ]];
 			var role = [[ ${role} ]];
-			var id = [[ ${review.id} ]];
+			var id = [[ ${board.id} ]];
 			var memberId = [[ ${memberId} ]];
 			var comment_uri = [[ @{/api/v1/comments} ]];
-			var boardId = [[ ${review.id} ]];
-			var printCommentList_uri = [[ @{/comments/} + ${review.id} ]];
-			var insertLikes_uri = [[ @{/review/likes} ]];
+			var boardId = [[ ${board.id} ]];
+			var printCommentList_uri = [[ @{/api/v1/comments/} ]] + [[ ${board.id} ]];
+			var insertLikes_uri = [[ @{/api/v1/community/likes} ]];
 			var boardSeq = [[ ${board.boardSeq} ]];
 			var privateYn = [[ ${board.privateYn} ]];
 		</script>
@@ -131,7 +144,7 @@
 		<script type="text/javascript" src="/js/lib/ko.js"></script>
 		<script type="text/javascript" src="/js/lib/moment.js"></script>
 		<script type="text/javascript" src="/js/app/board/board.js"></script>
-		<script type="text/javascript" src="/js/app/board/review/detail.js"></script>
+		<script type="text/javascript" src="/js/app/board/community/detail.js"></script>
 	</th:block>
 
 

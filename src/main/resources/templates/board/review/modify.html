@@ -37,7 +37,8 @@
 					<input type="hidden" id="id" name="id" th:if="${board != null}" th:value="${board.id}" />
 					<!-- 서버로 전달할 공지글 여부 -->
 					<input type="hidden" id="noticeYn" name="noticeYn" />
-					<input type="hidden" id="filter" name="filter" />
+					<input type="hidden" id="privateYn" name="privateYn" />
+					<input type="hidden" id="filterId" name="filterId" />
 					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${memberName}" />
 					<input type="hidden" id="regDate" name="regDate" class="write-date" />
 					<div>
@@ -50,6 +51,12 @@
 								<span class="chkbox" style="display: none;"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"></label></span>
 							</div>
 						</div>
+						<div class="write-private">
+							<div>
+								<span>비공개</span>
+								<span class="chkbox"><input type="checkbox" id="isPrivate" name="isPrivate" class="chk" /><i></i><label for="isPrivate"></label></span>
+							</div>
+						</div>
 						<div style="display: flex;">
 							<span class="write-filter">필터</span>
 							<select style="width: 100px; height: 22px; margin-left: .85rem; padding-left: 0; border: none;" id="filter">
@@ -60,7 +67,7 @@
 						<div>
 							<span class="write-title">제목</span>
 							<div class="write-title-input">
-								<input id="title" name="title" maxlength="20" />
+								<input id="title" name="title" maxlength="20" th:value="${board.title}" />
 							</div>
 						</div>
 						<div>
@@ -74,20 +81,18 @@
 							<div class="write-hashtag-input">
 								<!-- <input id="hashtags" maxlength="7" placeholder="해시태그는 수정이 불가합니다." disabled /> -->
 								<div id="hashtag-output">
-									<!--<span class="hashtag tagify__tag" th:text="${board.hashtag}">
-										 <button class="close-button remove-button"></button> 
-									</span>-->
+									<span class="hashtag tagify__tag" th:text="${board.hashtag}"></span>
 								</div>
-								<input type="hidden" id="hashtag" name="hashtag" />
+								<input type="hidden" id="hashtag" name="hashtag" th:value="${board.hashtag}" />
 							</div>
 						</div>
 					</div>
 				</form>
 				
-				<p class="btn_set">
+				<div class="btn__area">
 					<button class="write-cancel-btn" onclick="cancelBoard();">취소</button>
 					<button id="saveBtn" class="write-save-btn" onclick="saveBoard();">저장</button>
-				</p>
+				</div>
 			</section>
 		</div>
 	</main>

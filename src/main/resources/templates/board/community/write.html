@@ -38,7 +38,7 @@
 					<input type="hidden" id="privateYn" name="privateYn" />
 					<input type="hidden" id="filterId" name="filterId" />
 					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${memberName}" />
-					<input type="hidden" id="IDate" name="IDate" class="write-date" />
+					<input type="hidden" id="regDate" name="regDate" class="write-date" />
 					<div>
 						<div class="write-notice">
 							<div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')">
@@ -84,10 +84,10 @@
 					</div>
 				</form>
 				
-				<p class="btn_set">
+				<div class="btn__area">
 					<button class="write-cancel-btn" onclick="cancelBoard();">취소</button>
 					<button type="button" id="saveBtn" class="write-save-btn" onclick="saveBoard();">저장</button>
-				</p>
+				</div>
 			</section>
 		</div>
 	</main>

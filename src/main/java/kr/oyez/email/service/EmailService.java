@@ -47,8 +47,7 @@ public class EmailService {
 		msg += "<br>";
 		msg += "<div style='border: 1px solid black; font-family: 'Gowun Dodum', sans-serif;'>";
 		msg += "<div style='font-size: 130%;'>";
-		msg += "<h3>CODE : <strong>";
-		msg += ePw + "</strong></h3></div></div></div>";
+		msg += "<h3><strong>" + ePw + "</strong></h3></div></div></div>";
 		message.setText(msg, "UTF-8", "html");
 		message.setFrom(new InternetAddress("alstkdgks@gmail.com", "OYEZ"));
 		
@@ -68,7 +67,7 @@ public class EmailService {
 		msg += "<br>";
 		msg += "<p>아래 [이메일 인증 확인] 버튼을 눌러주세요.<p>";
 		msg += "<p></p>";
-		msg += "<a href='http://localhost:8081/certified?email=" + member.getMemberEmail() + "&ePw=" + ePwRand;
+		msg += "<a href='https://oyez.kr/certified?email=" + member.getMemberEmail() + "&ePw=" + ePwRand;
 		msg += "' target='_blank'>이메일 인증 확인</a>";
 		message.setText(msg, "UTF-8", "html");
 		message.setFrom(new InternetAddress("alstkdgks@gmail.com", "OYEZ"));

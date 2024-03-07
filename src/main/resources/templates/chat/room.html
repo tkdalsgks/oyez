@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+				layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>OYEZ, 채팅방 [[ ${room.name} ]]</title>
+
+<th:block layout:fragment="css">
+	<!-- POPUP -->
+	<link rel="stylesheet" th:href="@{/css/app/layouts/popup.css}" />
+	<!-- ROOM -->
+	<link rel="stylesheet" th:href="@{/css/app/chat/room.css}" />
+</th:block>
+
+</head>
+
+<body>
+
+	<!-- CHAT_ROOM : CONTENT -->
+	<main layout:fragment="content" class="container">
+        <div class="col-6">
+            <span class="chat__roomName">[[ ${room.name} ]]</span>
+        </div>
+        <div>
+            <div id="msgArea" class="col chat__msgArea"></div>
+            <div class="chat__msgArea-input input-group mb-3">
+                <input type="text" id="msg" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-6"></div>
+    </main>
+    
+    <!-- CHAT_ROOM : SCRIPT -->
+	<th:block layout:fragment="script">
+		<!-- SETTINGS -->
+		<script th:inline="javascript">
+			var certified = [[ ${certified} ]];
+			var role = [[ ${role} ]];
+	        var roomName = [[ ${room.name} ]];
+	        var roomId = [[ ${room.roomId} ]];
+	        var membername = [[ ${memberName} ]];
+	        var memberId = [[ ${memberId} ]];
+	        //var listchat = [[ ${listchat} ]];
+		</script>
+		<!-- ROOM -->
+		<script type="text/javascript" src="/js/lib/sockjs.min.js"></script>
+		<script type="text/javascript" src="/js/lib/stomp.min.js"></script>
+		<script type="text/javascript" src="/js/app/chat/room.js"></script>
+		<!-- LOADING -->
+		<script type="text/javascript" src="/js/lib/loadingoverlay.min.js"></script>
+		<script type="text/javascript" src="/js/app/loading.js"></script>
+	</th:block>
+	
+	
+</body>
+
+</html>

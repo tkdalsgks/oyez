@@ -452,8 +452,7 @@ function insertLikes(boardId) {
 				toastr.warning('다시 한 번 눌러주세요.');
 				return false;
 			} else {
-				alert(1)
-				//window.location.reload(true);
+				window.location.reload(true);
 			}
 		},
 		error: function(xhr, status, error) {

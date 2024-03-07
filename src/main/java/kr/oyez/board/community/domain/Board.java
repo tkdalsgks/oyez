@@ -33,6 +33,8 @@ public class Board {
 	
 	private String filter;
 	
+	private String hashtag;
+	
 	private int rating;
 	
 	private int viewCnt;

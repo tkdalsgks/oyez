@@ -38,7 +38,7 @@
 					<input type="hidden" id="privateYn" name="privateYn" />
 					<input type="hidden" id="filterId" name="filterId" />
 					<input type="hidden" id="writer" name="writer" class="write-writer" maxlength="10" th:value="${memberName}" />
-					<input type="hidden" id="IDate" name="IDate" class="write-date" />
+					<input type="hidden" id="regDate" name="regDate" class="write-date" />
 					<div>
 						<div class="write-notice">
 							<div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')">
@@ -47,6 +47,12 @@
 							</div>
 							<div sec:authorize="hasAnyRole('ROLE_MEMBER')">
 								<span class="chkbox" style="display: none;"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"></label></span>
+							</div>
+						</div>
+						<div class="write-private">
+							<div>
+								<span>비공개</span>
+								<span class="chkbox"><input type="checkbox" id="isPrivate" name="isPrivate" class="chk" /><i></i><label for="isPrivate"></label></span>
 							</div>
 						</div>
 						<div style="display: flex;">
@@ -79,10 +85,10 @@
 					</div>
 				</form>
 				
-				<p class="btn_set">
+				<div class="btn__area">
 					<button class="write-cancel-btn" onclick="cancelBoard();">취소</button>
 					<button id="saveBtn" class="write-save-btn" onclick="saveBoard();">저장</button>
-				</p>
+				</div>
 			</section>
 		</div>
 	</main>

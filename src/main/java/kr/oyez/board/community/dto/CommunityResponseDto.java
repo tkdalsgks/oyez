@@ -29,6 +29,8 @@ public class CommunityResponseDto {
 	
 	private String filter;
 	
+	private	String hashtag;
+	
 	private int rating;
 	
 	private int viewCnt;
@@ -46,11 +48,12 @@ public class CommunityResponseDto {
 	private String regDate;
 	
 	private String updtDate;
-
+	
 	@QueryProjection
 	public CommunityResponseDto(long id, String boardSeq, String title, String content, String writerId, String writer,
-			String titleImg, String profileImg, String filterCd, String filter, int rating, int viewCnt, int commentCnt,
-			int likesCnt, String noticeYn, String privateYn, String useYn, String regDate, String updtDate) {
+			String titleImg, String profileImg, String filterCd, String filter, String hashtag, int rating, int viewCnt,
+			int commentCnt, int likesCnt, String noticeYn, String privateYn, String useYn, String regDate,
+			String updtDate) {
 		this.id = id;
 		this.boardSeq = boardSeq;
 		this.title = title;
@@ -61,6 +64,7 @@ public class CommunityResponseDto {
 		this.profileImg = profileImg;
 		this.filterCd = filterCd;
 		this.filter = filter;
+		this.hashtag = hashtag;
 		this.rating = rating;
 		this.viewCnt = viewCnt;
 		this.commentCnt = commentCnt;

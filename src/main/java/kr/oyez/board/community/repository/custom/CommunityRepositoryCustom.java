@@ -21,8 +21,6 @@ public interface CommunityRepositoryCustom {
 	
 	void saveCommunity(CommunityRequestDto params);
 	
-	void saveHashtag(CommunityRequestDto params);
-	
 	String findByBoardSeq(Long id);
 	
 	CommunityResponseDto findByBoard(Long id);
@@ -33,7 +31,7 @@ public interface CommunityRepositoryCustom {
 	
 	Long countHits(Long id);
 	
-	Long updateBoard(CommunityRequestDto params);
+	void modifyBoard(CommunityRequestDto params);
 	
 	void deleteBoard(CommunityRequestDto params);
 	

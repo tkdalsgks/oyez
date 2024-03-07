@@ -228,6 +228,8 @@ public class CommunityController {
 						model.addAttribute("likes", 1);
 					}
 					*/
+					
+					return "board/community/detail";
 				}
 			} else if("2".equals(boardSeq)) {
 				// 리뷰 게시판
@@ -263,11 +265,13 @@ public class CommunityController {
 						model.addAttribute("likes", 1);
 					}
 					*/
+					
+					return "board/review/detail";
 				}
 			}
 		}
 		
-		return "board/community/detail";
+		return referer;
 	}
 	
 	/**

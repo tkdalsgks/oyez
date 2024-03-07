@@ -35,11 +35,6 @@ public class ReviewService {
 		reviewRepository.saveReview(params);
 	}
 	
-	public void saveHashtag(ReviewRequestDto params) {
-		
-		reviewRepository.saveHashtag(params);
-	}
-	
 	/*
 	public List<ReviewBoardResponseDto> findNotice(SearchDto params) {
 		return reviewRepository.findNotice(params);

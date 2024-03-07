@@ -48,7 +48,7 @@ public class LikesApiController {
 					jsonObj.addProperty("message", "좋아요는 하루 5개의 게시글만 가능합니다.");
 				} else {
 					boolean save = likesService.saveOrDeleteLikes(likes);
-					jsonObj.addProperty("result", save);				
+					jsonObj.addProperty("result", save);
 				}
 			} catch(DataAccessException e) {
 				jsonObj.addProperty("message", "데이터베이스 처리 과정에 문제가 발생하였습니다.");
